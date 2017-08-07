@@ -35,6 +35,8 @@ composeWithPagination(userTypeComposer, {
 });
 ```
 
+<img width="832" alt="screen shot 2017-08-07 at 23 31 46" src="https://user-images.githubusercontent.com/1946920/29038210-ad2390e4-7bc8-11e7-8143-ff0cca2b39cc.png">
+
 Requirements
 ============
 Types should have following resolvers:
