@@ -1,0 +1,78 @@
+{
+  "name": "graphql-compose-pagination",
+  "version": "0.0.0-semantically-released",
+  "description": "Plugin for `graphql-compose` which provide a pagination resolver for types.",
+  "files": [
+    "lib",
+    "README.md"
+  ],
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodkz/graphql-compose-pagination.git"
+  },
+  "keywords": [
+    "graphql",
+    "compose",
+    "graphql-compose",
+    "relay",
+    "pagination"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nodkz/graphql-compose-pagination/issues"
+  },
+  "homepage": "https://github.com/nodkz/graphql-compose-pagination",
+  "peerDependencies": {
+    "graphql-compose": ">=1.20.3 || >=2.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
+    "babel-jest": "^20.0.3",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "cz-conventional-changelog": "^2.0.0",
+    "eslint": "^4.4.0",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-config-prettier": "^2.3.0",
+    "eslint-plugin-flowtype": "^2.35.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-prettier": "^2.1.2",
+    "flow-bin": "^0.52.0",
+    "graphql": "^0.10.5",
+    "graphql-compose": "^2.2.0",
+    "jest": "^20.0.4",
+    "prettier": "^1.5.3",
+    "rimraf": "^2.6.1",
+    "semantic-release": "^6.3.2"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.25.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ]
+  },
+  "scripts": {
+    "build": "npm run build-cjs && npm run build-flow",
+    "build-cjs": "rimraf lib && babel src --ignore __tests__,__mocks__ -d lib",
+    "build-flow": "find ./src -name '*.js' -not -path '*/__*' | while read filepath; do cp $filepath `echo $filepath | sed 's/\\/src\\//\\/lib\\//g'`.flow; done",
+    "watch": "jest --watch",
+    "coverage": "jest --coverage",
+    "lint": "eslint --ext .js ./src",
+    "flow": "./node_modules/.bin/flow stop && ./node_modules/.bin/flow",
+    "test": "npm run coverage && npm run lint && npm run flow",
+    "link": "yarn build && yarn link graphql-compose && yarn link",
+    "unlink": "yarn unlink graphql-compose && yarn add graphql-compose",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  }
+}
