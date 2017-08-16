@@ -8,6 +8,8 @@ import { preparePaginationResolver } from '../paginationResolver';
 const { GraphQLInt } = graphql;
 
 describe('paginationResolver', () => {
+  const spyFindManyResolve = jest.spyOn(userTypeComposer.getResolver('findMany'), 'resolve');
+  const spyCountResolve = jest.spyOn(userTypeComposer.getResolver('count'), 'resolve');
   const paginationResolver = preparePaginationResolver(userTypeComposer, {
     countResolverName: 'count',
     findResolverName: 'findMany',
@@ -252,6 +254,41 @@ describe('paginationResolver', () => {
   });
 
   describe('filter tests with resolve', () => {
+    it('should pass `filter` arg to `findResolverfindMany` and `count` resolvers', async () => {
+      spyFindManyResolve.mockClear();
+      spyCountResolve.mockClear();
+      await paginationResolver.resolve({
+        args: {
+          filter: {
+            gender: 'm',
+          },
+        },
+        projection: {
+          count: true,
+          items: {
+            name: true,
+          },
+        },
+      });
+      expect(spyFindManyResolve.mock.calls).toEqual([
+        [
+          {
+            args: { filter: { gender: 'm' }, limit: 6 },
+            projection: { count: true, items: { name: true }, name: true },
+          },
+        ],
+      ]);
+      expect(spyCountResolve.mock.calls).toEqual([
+        [
+          {
+            args: { filter: { gender: 'm' } },
+            projection: { count: true, items: { name: true } },
+            rawQuery: undefined,
+          },
+        ],
+      ]);
+    });
+
     it('should add additional filtering', async () => {
       const result = await paginationResolver.resolve({
         args: {
@@ -281,6 +318,41 @@ describe('paginationResolver', () => {
         gender: 'm',
       });
       expect(result.count).toBe(8);
+    });
+  });
+
+  describe('sort tests with resolve', () => {
+    it('should pass `sort` arg to `findResolverfindMany` but not to `count` resolvers', async () => {
+      spyFindManyResolve.mockClear();
+      spyCountResolve.mockClear();
+      await paginationResolver.resolve({
+        args: {
+          sort: { _id: 1 },
+        },
+        projection: {
+          count: true,
+          items: {
+            name: true,
+          },
+        },
+      });
+      expect(spyFindManyResolve.mock.calls).toEqual([
+        [
+          {
+            args: { limit: 6, sort: { _id: 1 } },
+            projection: { count: true, items: { name: true }, name: true },
+          },
+        ],
+      ]);
+      expect(spyCountResolve.mock.calls).toEqual([
+        [
+          {
+            args: { filter: {} },
+            projection: { count: true, items: { name: true } },
+            rawQuery: undefined,
+          },
+        ],
+      ]);
     });
   });
 
