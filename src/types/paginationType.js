@@ -1,11 +1,14 @@
 /* @flow */
 /* eslint-disable arrow-body-style */
 
-import { graphql } from 'graphql-compose';
 import type { TypeComposer } from 'graphql-compose';
+import {
+  GraphQLInt,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLList,
+} from 'graphql-compose/lib/graphql';
 import PaginationInfoType from './paginationInfoType';
-
-const { GraphQLInt, GraphQLObjectType, GraphQLNonNull, GraphQLList } = graphql;
 
 const cachedPaginationTypes = new WeakMap();
 

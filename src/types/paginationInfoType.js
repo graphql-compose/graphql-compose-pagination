@@ -1,8 +1,11 @@
 /* @flow */
 
-import { graphql } from 'graphql-compose';
-
-const { GraphQLBoolean, GraphQLObjectType, GraphQLNonNull, GraphQLInt } = graphql;
+import {
+  GraphQLBoolean,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLInt,
+} from 'graphql-compose/lib/graphql';
 
 const PaginationInfoType = new GraphQLObjectType({
   name: 'PaginationInfo',

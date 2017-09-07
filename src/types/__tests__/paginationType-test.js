@@ -1,11 +1,16 @@
 /* @flow */
 
-import { TypeComposer, graphql } from 'graphql-compose';
+import { TypeComposer } from 'graphql-compose';
+import {
+  GraphQLNonNull,
+  GraphQLObjectType,
+  getNamedType,
+  GraphQLInt,
+  GraphQLList,
+} from 'graphql-compose/lib/graphql';
 import { userTypeComposer } from '../../__mocks__/userTypeComposer';
 import preparePaginationType from '../paginationType';
 import PaginationInfoType from '../paginationInfoType';
-
-const { GraphQLNonNull, GraphQLObjectType, getNamedType, GraphQLInt, GraphQLList } = graphql;
 
 describe('types/paginationType.js', () => {
   describe('preparePaginationType()', () => {

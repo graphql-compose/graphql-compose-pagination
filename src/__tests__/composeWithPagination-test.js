@@ -1,12 +1,11 @@
 /* @flow */
 /* eslint-disable no-param-reassign */
 
-import { TypeComposer, graphql } from 'graphql-compose';
+import { TypeComposer } from 'graphql-compose';
+import { GraphQLSchema, GraphQLList, graphql } from 'graphql-compose/lib/graphql';
 import { composeWithPagination } from '../composeWithPagination';
 import { userTypeComposer } from '../__mocks__/userTypeComposer';
 import { rootQueryTypeComposer as rootQueryTC } from '../__mocks__/rootQueryTypeComposer';
-
-const { GraphQLSchema, GraphQLList } = graphql;
 
 describe('composeWithRelay', () => {
   const userComposer = composeWithPagination(userTypeComposer, {
@@ -100,7 +99,7 @@ describe('composeWithRelay', () => {
         gender
       }
       `;
-      const result = await graphql.graphql(schema, query);
+      const result = await graphql(schema, query);
       expect(result).toEqual({
         data: {
           userPagination: {
@@ -142,7 +141,7 @@ describe('composeWithRelay', () => {
         count
       }
     }`;
-    await graphql.graphql(schema, query);
+    await graphql(schema, query);
     // $FlowFixMe
     expect(Object.keys(topResolveParams.countResolveParams)).toEqual(
       expect.arrayContaining(['source', 'args', 'context', 'info', 'projection'])
@@ -172,7 +171,7 @@ describe('composeWithRelay', () => {
         count
       }
     }`;
-    await graphql.graphql(schema, query);
+    await graphql(schema, query);
     // $FlowFixMe
     expect(Object.keys(topResolveParams.findManyResolveParams)).toEqual(
       expect.arrayContaining(['source', 'args', 'context', 'info', 'projection'])

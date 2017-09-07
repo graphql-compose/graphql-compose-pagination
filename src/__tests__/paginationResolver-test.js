@@ -1,11 +1,10 @@
 /* @flow */
 /* eslint-disable no-param-reassign */
 
-import { Resolver, graphql } from 'graphql-compose';
+import { Resolver } from 'graphql-compose';
+import { GraphQLInt } from 'graphql-compose/lib/graphql';
 import { userTypeComposer } from '../__mocks__/userTypeComposer';
 import { preparePaginationResolver } from '../paginationResolver';
-
-const { GraphQLInt } = graphql;
 
 describe('paginationResolver', () => {
   const spyFindManyResolve = jest.spyOn(userTypeComposer.getResolver('findMany'), 'resolve');
