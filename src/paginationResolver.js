@@ -2,15 +2,42 @@
 /* eslint-disable no-param-reassign, no-use-before-define */
 
 import { Resolver, TypeComposer } from 'graphql-compose';
-import type {
-  ResolveParams,
-  PaginationResolveParams,
-  GraphQLPaginationType,
-  ComposeWithPaginationOpts,
-} from './definition';
+import type { ResolveParams, ProjectionType } from 'graphql-compose';
+import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
+import type { ComposeWithPaginationOpts } from './composeWithPagination';
 import preparePaginationType from './types/paginationType';
 
-const defaultPerPage = 20;
+const DEFAULT_PER_PAGE = 20;
+
+export type PaginationResolveParams<TSource, TContext> = {
+  source: TSource,
+  args: {
+    page?: ?number,
+    perPage?: ?number,
+    sort?: any,
+    filter?: { [fieldName: string]: any },
+    [argName: string]: any,
+  },
+  context: TContext,
+  info: GraphQLResolveInfo,
+  projection: $Shape<ProjectionType>,
+  [opt: string]: any,
+};
+
+export type PaginationType = {|
+  count: number,
+  items: any[],
+  pageInfo: PaginationInfoType,
+|};
+
+export type PaginationInfoType = {|
+  currentPage: number,
+  perPage: number,
+  itemCount: number,
+  pageCount: number,
+  hasPreviousPage: boolean,
+  hasNextPage: boolean,
+|};
 
 export function preparePaginationResolver<TSource, TContext>(
   typeComposer: TypeComposer,
@@ -78,7 +105,7 @@ export function preparePaginationResolver<TSource, TContext>(
       perPage: {
         type: 'Int',
         description: '',
-        defaultValue: opts.perPage || defaultPerPage,
+        defaultValue: opts.perPage || DEFAULT_PER_PAGE,
       },
       ...additionalArgs,
     },
@@ -95,7 +122,7 @@ export function preparePaginationResolver<TSource, TContext>(
       if (page <= 0) {
         throw new Error('Argument `page` should be positive number.');
       }
-      const perPage = parseInt(args.perPage, 10) || opts.perPage || defaultPerPage;
+      const perPage = parseInt(args.perPage, 10) || opts.perPage || DEFAULT_PER_PAGE;
       if (perPage <= 0) {
         throw new Error('Argument `perPage` should be positive number.');
       }
@@ -147,7 +174,7 @@ export function preparePaginationResolver<TSource, TContext>(
       }
 
       return Promise.all([findManyPromise, countPromise]).then(([items, count]) => {
-        const result: GraphQLPaginationType = {
+        const result: PaginationType = {
           count,
           items: items.length > limit ? items.slice(0, limit) : items,
           pageInfo: {
