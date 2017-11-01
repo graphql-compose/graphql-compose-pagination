@@ -21,17 +21,17 @@ describe('paginationResolver', () => {
     });
 
     it('should throw error if first arg is not TypeComposer', () => {
-      // $FlowFixMe
-      expect(() => preparePaginationResolver(123)).toThrowError(
-        'should be instance of TypeComposer'
-      );
+      expect(() => {
+        const args: any = [123];
+        preparePaginationResolver(...args);
+      }).toThrowError('should be instance of TypeComposer');
     });
 
     it('should throw error if opts.countResolverName are empty', () => {
-      // $FlowFixMe
-      expect(() => preparePaginationResolver(userTypeComposer, {})).toThrowError(
-        'should have option `opts.countResolverName`'
-      );
+      expect(() => {
+        const args: any = [userTypeComposer, {}];
+        preparePaginationResolver(...args);
+      }).toThrowError('should have option `opts.countResolverName`');
     });
 
     it('should throw error if resolver opts.countResolverName does not exists', () => {
@@ -44,12 +44,10 @@ describe('paginationResolver', () => {
     });
 
     it('should throw error if opts.findResolverName are empty', () => {
-      expect(() =>
-        // $FlowFixMe
-        preparePaginationResolver(userTypeComposer, {
-          countResolverName: 'count',
-        })
-      ).toThrowError('should have option `opts.findResolverName`');
+      expect(() => {
+        const args: any = [userTypeComposer, { countResolverName: 'count' }];
+        preparePaginationResolver(...args);
+      }).toThrowError('should have option `opts.findResolverName`');
     });
 
     it('should throw error if resolver opts.countResolverName does not exists', () => {
@@ -72,19 +70,16 @@ describe('paginationResolver', () => {
     });
 
     it('should have type to be ConnectionType', () => {
-      // $FlowFixMe
-      expect(paginationResolver.type.name).toBe('UserPagination');
+      expect((paginationResolver.type: any).name).toBe('UserPagination');
     });
   });
 
   describe('resolver args', () => {
     it('should have `page` arg', () => {
-      // $FlowFixMe
       expect(paginationResolver.getArg('page').type).toBe(GraphQLInt);
     });
 
     it('should have `perPage` arg', () => {
-      // $FlowFixMe
       expect(paginationResolver.getArg('perPage').type).toBe(GraphQLInt);
     });
   });

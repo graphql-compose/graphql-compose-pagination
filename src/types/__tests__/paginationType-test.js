@@ -39,16 +39,14 @@ describe('types/paginationType.js', () => {
       const tc = new TypeComposer(preparePaginationType(userTypeComposer));
       expect(tc.getFieldType('items')).toBeInstanceOf(GraphQLList);
 
-      const items = getNamedType(tc.getFieldType('items'));
-      // $FlowFixMe
+      const items: any = getNamedType(tc.getFieldType('items'));
       expect(items.name).toEqual('User');
     });
 
     it('should have `ofType` property (like GraphQLList, GraphQLNonNull)', () => {
       // this behavior needed for `graphql-compose` module in `projection` helper
       // otherwise it incorrectly construct projectionMapper for tricky fields
-      const connectionType = preparePaginationType(userTypeComposer);
-      // $FlowFixMe
+      const connectionType: any = preparePaginationType(userTypeComposer);
       expect(connectionType.ofType).toEqual(userTypeComposer.getType());
     });
 

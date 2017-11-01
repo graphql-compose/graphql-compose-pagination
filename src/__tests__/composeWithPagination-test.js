@@ -20,15 +20,17 @@ describe('composeWithRelay', () => {
     });
 
     it('should throw error if first arg is not TypeComposer', () => {
-      // $FlowFixMe
-      expect(() => composeWithPagination(123)).toThrowError('should provide TypeComposer instance');
+      expect(() => {
+        const args: any = [123];
+        composeWithPagination(...args);
+      }).toThrowError('should provide TypeComposer instance');
     });
 
     it('should throw error if options are empty', () => {
-      // $FlowFixMe
-      expect(() => composeWithPagination(userTypeComposer)).toThrowError(
-        'should provide non-empty options'
-      );
+      expect(() => {
+        const args: any = [userTypeComposer];
+        composeWithPagination(...args);
+      }).toThrowError('should provide non-empty options');
     });
 
     it('should not change `pagination` resolver if exists', () => {
@@ -51,8 +53,7 @@ describe('composeWithRelay', () => {
 
   describe('check `pagination` resolver props', () => {
     const rsv = userComposer.getResolver('pagination');
-    const type = rsv.getType();
-    // $FlowFixMe
+    const type: any = rsv.getType();
     const tc = new TypeComposer(type);
 
     it('should exists', () => {
@@ -123,7 +124,7 @@ describe('composeWithRelay', () => {
   });
 
   it('should pass `countResolveParams` to top resolverParams', async () => {
-    let topResolveParams;
+    let topResolveParams: any = {};
 
     rootQueryTC.setField(
       'userPagination',
@@ -142,18 +143,17 @@ describe('composeWithRelay', () => {
       }
     }`;
     await graphql(schema, query);
-    // $FlowFixMe
+
     expect(Object.keys(topResolveParams.countResolveParams)).toEqual(
       expect.arrayContaining(['source', 'args', 'context', 'info', 'projection'])
     );
-    // $FlowFixMe
     expect(topResolveParams.countResolveParams.args).toEqual({
       filter: { age: 45 },
     });
   });
 
   it('should pass `findManyResolveParams` to top resolverParams', async () => {
-    let topResolveParams;
+    let topResolveParams: any = {};
 
     rootQueryTC.setField(
       'userPagination',
@@ -172,11 +172,11 @@ describe('composeWithRelay', () => {
       }
     }`;
     await graphql(schema, query);
-    // $FlowFixMe
+
     expect(Object.keys(topResolveParams.findManyResolveParams)).toEqual(
       expect.arrayContaining(['source', 'args', 'context', 'info', 'projection'])
     );
-    // $FlowFixMe
+
     expect(topResolveParams.findManyResolveParams.args).toEqual({
       filter: { age: 45 },
       limit: 6,

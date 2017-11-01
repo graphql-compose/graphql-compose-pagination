@@ -107,7 +107,7 @@ export function preparePaginationResolver<TSource, TContext>(
         description: '',
         defaultValue: opts.perPage || DEFAULT_PER_PAGE,
       },
-      ...additionalArgs,
+      ...(additionalArgs: any),
     },
     // eslint-disable-next-line
     resolve: async (resolveParams: $Shape<PaginationResolveParams<TSource, TContext>>) => {
