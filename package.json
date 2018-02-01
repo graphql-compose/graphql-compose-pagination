@@ -73,6 +73,6 @@
     "test": "npm run coverage && npm run lint && npm run flow",
     "link": "yarn build && yarn link graphql-compose && yarn link",
     "unlink": "yarn unlink graphql-compose && yarn add graphql-compose",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release"
   }
 }
