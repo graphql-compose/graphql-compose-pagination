@@ -43,7 +43,7 @@ export function preparePaginationResolver<TSource, TContext>(
   typeComposer: TypeComposer,
   opts: ComposeWithPaginationOpts
 ): Resolver<TSource, TContext> {
-  if (!(typeComposer instanceof TypeComposer)) {
+  if (!typeComposer || typeComposer.constructor.name !== 'TypeComposer') {
     throw new Error('First arg for prepareConnectionResolver() should be instance of TypeComposer');
   }
 

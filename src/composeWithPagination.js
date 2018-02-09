@@ -13,7 +13,7 @@ export function composeWithPagination(
   typeComposer: TypeComposer,
   opts: ComposeWithPaginationOpts
 ): TypeComposer {
-  if (!(typeComposer instanceof TypeComposer)) {
+  if (!typeComposer || typeComposer.constructor.name !== 'TypeComposer') {
     throw new Error('You should provide TypeComposer instance to composeWithPagination method');
   }
 
