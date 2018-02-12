@@ -42,7 +42,7 @@ export type PaginationInfoType = {|
 export function preparePaginationResolver<TSource, TContext>(
   typeComposer: TypeComposer,
   opts: ComposeWithPaginationOpts
-): Resolver<TSource, TContext> {
+): Resolver {
   if (!typeComposer || typeComposer.constructor.name !== 'TypeComposer') {
     throw new Error('First arg for prepareConnectionResolver() should be instance of TypeComposer');
   }
