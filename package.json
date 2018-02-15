@@ -9,7 +9,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nodkz/graphql-compose-pagination.git"
+    "url": "https://github.com/graphql-compose/graphql-compose-pagination.git"
   },
   "keywords": [
     "graphql",
@@ -20,9 +20,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nodkz/graphql-compose-pagination/issues"
+    "url": "https://github.com/graphql-compose/graphql-compose-pagination/issues"
   },
-  "homepage": "https://github.com/nodkz/graphql-compose-pagination",
+  "homepage": "https://github.com/graphql-compose/graphql-compose-pagination",
   "peerDependencies": {
     "graphql-compose": ">=2.9.5 || >=3.0.0"
   },

@@ -1,18 +1,18 @@
 # graphql-compose-pagination
 
-[![travis build](https://img.shields.io/travis/nodkz/graphql-compose-pagination.svg)](https://travis-ci.org/nodkz/graphql-compose-pagination)
-[![codecov coverage](https://img.shields.io/codecov/c/github/nodkz/graphql-compose-pagination.svg)](https://codecov.io/github/nodkz/graphql-compose-pagination)
+[![travis build](https://img.shields.io/travis/graphql-compose/graphql-compose-pagination.svg)](https://travis-ci.org/graphql-compose/graphql-compose-pagination)
+[![codecov coverage](https://img.shields.io/codecov/c/github/graphql-compose/graphql-compose-pagination.svg)](https://codecov.io/github/graphql-compose/graphql-compose-pagination)
 [![](https://img.shields.io/npm/v/graphql-compose-pagination.svg)](https://www.npmjs.com/package/graphql-compose-pagination)
 [![npm](https://img.shields.io/npm/dt/graphql-compose-pagination.svg)](http://www.npmtrends.com/graphql-compose-pagination)
-[![Join the chat at https://gitter.im/graphql-compose/Lobby](https://badges.gitter.im/nodkz/graphql-compose.svg)](https://gitter.im/graphql-compose/Lobby)
+[![Join the chat at https://gitter.im/graphql-compose/Lobby](https://badges.gitter.im/graphql-compose/graphql-compose.svg)](https://gitter.im/graphql-compose/Lobby)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![Greenkeeper badge](https://badges.greenkeeper.io/nodkz/graphql-compose-pagination.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/graphql-compose/graphql-compose-pagination.svg)](https://greenkeeper.io/)
 
-This is a plugin for [graphql-compose](https://github.com/nodkz/graphql-compose) family, which adds to the TypeComposer `pagination` resolver.
+This is a plugin for [graphql-compose](https://github.com/graphql-compose/graphql-compose) family, which adds to the TypeComposer `pagination` resolver.
 
 Live demo: [https://graphql-compose.herokuapp.com/](https://graphql-compose.herokuapp.com/)
 
-[CHANGELOG](https://github.com/nodkz/graphql-compose-pagination/blob/master/CHANGELOG.md)
+[CHANGELOG](https://github.com/graphql-compose/graphql-compose-pagination/blob/master/CHANGELOG.md)
 
 Installation
 ============
@@ -45,9 +45,9 @@ Types should have following resolvers:
 
 Used in plugins
 ===============
-[graphql-compose-mongoose](https://github.com/nodkz/graphql-compose-mongoose) - converts mongoose models to graphql types
+[graphql-compose-mongoose](https://github.com/graphql-compose/graphql-compose-mongoose) - converts mongoose models to graphql types
 
 
 License
 =======
-[MIT](https://github.com/nodkz/graphql-compose-pagination/blob/master/LICENSE.md)
+[MIT](https://github.com/graphql-compose/graphql-compose-pagination/blob/master/LICENSE.md)
