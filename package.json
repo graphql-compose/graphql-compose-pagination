@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/graphql-compose/graphql-compose-pagination",
   "peerDependencies": {
-    "graphql-compose": ">=2.9.5 || >=3.0.0"
+    "graphql-compose": ">=3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

@@ -1,16 +1,20 @@
 /* @flow */
 /* eslint-disable no-param-reassign, no-use-before-define */
 
-import { Resolver, TypeComposer } from 'graphql-compose';
-import type { ResolveParams, ProjectionType } from 'graphql-compose';
+import type {
+  Resolver,
+  TypeComposer,
+  ResolveParams, // eslint-disable-line
+  ProjectionType,
+} from 'graphql-compose';
 import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
 import type { ComposeWithPaginationOpts } from './composeWithPagination';
 import preparePaginationType from './types/paginationType';
 
 const DEFAULT_PER_PAGE = 20;
 
-export type PaginationResolveParams<TSource, TContext> = {
-  source: TSource,
+export type PaginationResolveParams<TContext> = {
+  source: any,
   args: {
     page?: ?number,
     perPage?: ?number,
@@ -39,24 +43,24 @@ export type PaginationInfoType = {|
   hasNextPage: boolean,
 |};
 
-export function preparePaginationResolver<TSource, TContext>(
-  typeComposer: TypeComposer,
+export function preparePaginationResolver(
+  tc: TypeComposer,
   opts: ComposeWithPaginationOpts
 ): Resolver {
-  if (!typeComposer || typeComposer.constructor.name !== 'TypeComposer') {
+  if (!tc || tc.constructor.name !== 'TypeComposer') {
     throw new Error('First arg for prepareConnectionResolver() should be instance of TypeComposer');
   }
 
   if (!opts.countResolverName) {
     throw new Error(
-      `TypeComposer(${typeComposer.getTypeName()}) provided to composeWithConnection ` +
+      `TypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
         'should have option `opts.countResolverName`.'
     );
   }
-  const countResolver = typeComposer.getResolver(opts.countResolverName);
+  const countResolver = tc.getResolver(opts.countResolverName);
   if (!countResolver) {
     throw new Error(
-      `TypeComposer(${typeComposer.getTypeName()}) provided to composeWithConnection ` +
+      `TypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
         `should have resolver with name '${opts.countResolverName}' ` +
         'due opts.countResolverName.'
     );
@@ -65,14 +69,14 @@ export function preparePaginationResolver<TSource, TContext>(
 
   if (!opts.findResolverName) {
     throw new Error(
-      `TypeComposer(${typeComposer.getTypeName()}) provided to composeWithConnection ` +
+      `TypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
         'should have option `opts.findResolverName`.'
     );
   }
-  const findManyResolver = typeComposer.getResolver(opts.findResolverName);
+  const findManyResolver = tc.getResolver(opts.findResolverName);
   if (!findManyResolver) {
     throw new Error(
-      `TypeComposer(${typeComposer.getTypeName()}) provided to composeWithConnection ` +
+      `TypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
         `should have resolver with name '${opts.findResolverName}' ` +
         'due opts.countResolverName.'
     );
@@ -93,8 +97,8 @@ export function preparePaginationResolver<TSource, TContext>(
     }
   }
 
-  return new Resolver({
-    type: preparePaginationType(typeComposer),
+  return new tc.constructor.schemaComposer.Resolver({
+    type: preparePaginationType(tc),
     name: 'pagination',
     kind: 'query',
     args: {
@@ -110,12 +114,14 @@ export function preparePaginationResolver<TSource, TContext>(
       ...(additionalArgs: any),
     },
     // eslint-disable-next-line
-    resolve: async (resolveParams: $Shape<PaginationResolveParams<TSource, TContext>>) => {
+    resolve: async /* :: <TContext> */(
+      rp /* : $Shape<PaginationResolveParams<TContext>> */
+    ) => {
       let countPromise;
       let findManyPromise;
-      const { projection = {}, args, rawQuery } = resolveParams;
-      const findManyParams: $Shape<ResolveParams<TSource, TContext>> = {
-        ...resolveParams,
+      const { projection = {}, args, rawQuery } = rp;
+      const findManyParams /* : $Shape<ResolveParams<any, TContext>> */ = {
+        ...rp,
       };
 
       const page = parseInt(args.page, 10) || 1;
@@ -127,11 +133,11 @@ export function preparePaginationResolver<TSource, TContext>(
         throw new Error('Argument `perPage` should be positive number.');
       }
 
-      const countParams: $Shape<ResolveParams<TSource, TContext>> = {
-        ...resolveParams,
+      const countParams /* : $Shape<ResolveParams<any, TContext>> */ = {
+        ...rp,
         rawQuery,
         args: {
-          filter: { ...resolveParams.args.filter },
+          filter: { ...rp.args.filter },
         },
       };
 
@@ -146,7 +152,7 @@ export function preparePaginationResolver<TSource, TContext>(
 
       if (projection && projection.items) {
         // combine top level projection
-        // (maybe somebody add additional fields via resolveParams.projection)
+        // (maybe somebody add additional fields via rp.projection)
         // and items (record needed fields)
         findManyParams.projection = { ...projection, ...projection.items };
       } else {
@@ -162,8 +168,8 @@ export function preparePaginationResolver<TSource, TContext>(
       }
 
       // pass findMany ResolveParams to top resolver
-      resolveParams.findManyResolveParams = findManyParams;
-      resolveParams.countResolveParams = countParams;
+      rp.findManyResolveParams = findManyParams;
+      rp.countResolveParams = countParams;
 
       // This allows to optimize and not actually call the findMany resolver
       // if only the count is projected
