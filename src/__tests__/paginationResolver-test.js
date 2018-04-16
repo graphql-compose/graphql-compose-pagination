@@ -76,11 +76,11 @@ describe('paginationResolver', () => {
 
   describe('resolver args', () => {
     it('should have `page` arg', () => {
-      expect(paginationResolver.getArg('page').type).toBe(GraphQLInt);
+      expect(paginationResolver.getArgType('page')).toBe(GraphQLInt);
     });
 
     it('should have `perPage` arg', () => {
-      expect(paginationResolver.getArg('perPage').type).toBe(GraphQLInt);
+      expect(paginationResolver.getArgType('perPage')).toBe(GraphQLInt);
     });
   });
 
