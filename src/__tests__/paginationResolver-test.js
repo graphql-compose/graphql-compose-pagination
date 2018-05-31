@@ -3,13 +3,13 @@
 
 import { Resolver } from 'graphql-compose';
 import { GraphQLInt } from 'graphql-compose/lib/graphql';
-import { userTypeComposer } from '../__mocks__/userTypeComposer';
+import { UserTC } from '../__mocks__/User';
 import { preparePaginationResolver } from '../paginationResolver';
 
 describe('paginationResolver', () => {
-  const spyFindManyResolve = jest.spyOn(userTypeComposer.getResolver('findMany'), 'resolve');
-  const spyCountResolve = jest.spyOn(userTypeComposer.getResolver('count'), 'resolve');
-  const paginationResolver = preparePaginationResolver(userTypeComposer, {
+  const spyFindManyResolve = jest.spyOn(UserTC.getResolver('findMany'), 'resolve');
+  const spyCountResolve = jest.spyOn(UserTC.getResolver('count'), 'resolve');
+  const paginationResolver = preparePaginationResolver(UserTC, {
     countResolverName: 'count',
     findResolverName: 'findMany',
     perPage: 5,
@@ -29,14 +29,14 @@ describe('paginationResolver', () => {
 
     it('should throw error if opts.countResolverName are empty', () => {
       expect(() => {
-        const args: any = [userTypeComposer, {}];
+        const args: any = [UserTC, {}];
         preparePaginationResolver(...args);
       }).toThrowError('should have option `opts.countResolverName`');
     });
 
     it('should throw error if resolver opts.countResolverName does not exists', () => {
       expect(() =>
-        preparePaginationResolver(userTypeComposer, {
+        preparePaginationResolver(UserTC, {
           countResolverName: 'countDoesNotExists',
           findResolverName: 'findMany',
         })
@@ -45,14 +45,14 @@ describe('paginationResolver', () => {
 
     it('should throw error if opts.findResolverName are empty', () => {
       expect(() => {
-        const args: any = [userTypeComposer, { countResolverName: 'count' }];
+        const args: any = [UserTC, { countResolverName: 'count' }];
         preparePaginationResolver(...args);
       }).toThrowError('should have option `opts.findResolverName`');
     });
 
     it('should throw error if resolver opts.countResolverName does not exists', () => {
       expect(() =>
-        preparePaginationResolver(userTypeComposer, {
+        preparePaginationResolver(UserTC, {
           countResolverName: 'count',
           findResolverName: 'findManyDoesNotExists',
         })
@@ -70,7 +70,7 @@ describe('paginationResolver', () => {
     });
 
     it('should have type to be ConnectionType', () => {
-      expect((paginationResolver.type: any).name).toBe('UserPagination');
+      expect((paginationResolver.type: any).getTypeName()).toBe('UserPagination');
     });
   });
 
@@ -93,23 +93,19 @@ describe('paginationResolver', () => {
     beforeEach(() => {
       findManyResolverCalled = false;
       countResolverCalled = false;
-      const mockedFindMany = userTypeComposer
-        .getResolver('findMany')
-        .wrapResolve(next => resolveParams => {
-          findManyResolverCalled = true;
-          spyResolveParams = resolveParams;
-          return next(resolveParams);
-        });
-      const mockedCount = userTypeComposer
-        .getResolver('findMany')
-        .wrapResolve(next => resolveParams => {
-          countResolverCalled = true;
-          spyResolveParams = resolveParams;
-          return next(resolveParams);
-        });
-      userTypeComposer.setResolver('mockedFindMany', mockedFindMany);
-      userTypeComposer.setResolver('mockedCount', mockedCount);
-      mockedpaginationResolver = preparePaginationResolver(userTypeComposer, {
+      const mockedFindMany = UserTC.getResolver('findMany').wrapResolve(next => resolveParams => {
+        findManyResolverCalled = true;
+        spyResolveParams = resolveParams;
+        return next(resolveParams);
+      });
+      const mockedCount = UserTC.getResolver('findMany').wrapResolve(next => resolveParams => {
+        countResolverCalled = true;
+        spyResolveParams = resolveParams;
+        return next(resolveParams);
+      });
+      UserTC.setResolver('mockedFindMany', mockedFindMany);
+      UserTC.setResolver('mockedCount', mockedCount);
+      mockedpaginationResolver = preparePaginationResolver(UserTC, {
         countResolverName: 'mockedCount',
         findResolverName: 'mockedFindMany',
       });

@@ -1,21 +1,21 @@
 /* @flow */
 /* eslint-disable no-param-reassign */
 
-import { userTypeComposer } from '../__mocks__/userTypeComposer';
+import { UserTC } from '../__mocks__/User';
 
-describe('mocks/userTypeComposer', () => {
-  it('userTypeComposer should have `count` resolver', async () => {
-    const cnt = await userTypeComposer.getResolver('count').resolve({});
+describe('mocks/UserTC', () => {
+  it('UserTC should have `count` resolver', async () => {
+    const cnt = await UserTC.getResolver('count').resolve({});
     expect(cnt).toBe(15);
   });
 
-  it('userTypeComposer should have `findMany` resolver', async () => {
-    const res = await userTypeComposer.getResolver('findMany').resolve({});
+  it('UserTC should have `findMany` resolver', async () => {
+    const res = await UserTC.getResolver('findMany').resolve({});
     expect(res).toHaveLength(15);
   });
 
-  it('userTypeComposer should have `findMany` resolver with working `filter` arg', async () => {
-    const res = await userTypeComposer.getResolver('findMany').resolve({
+  it('UserTC should have `findMany` resolver with working `filter` arg', async () => {
+    const res = await UserTC.getResolver('findMany').resolve({
       args: {
         filter: {
           gender: 'm',
@@ -35,8 +35,8 @@ describe('mocks/userTypeComposer', () => {
     expect(res).toEqual([{ id: 9, name: 'user09', age: 19, gender: 'm' }]);
   });
 
-  it('userTypeComposer should have `findMany` resolver with working `sort` arg', async () => {
-    const res = await userTypeComposer.getResolver('findMany').resolve({
+  it('UserTC should have `findMany` resolver with working `sort` arg', async () => {
+    const res = await UserTC.getResolver('findMany').resolve({
       args: {
         sort: {
           age: -1,

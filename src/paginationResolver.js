@@ -9,7 +9,7 @@ import type {
 } from 'graphql-compose';
 import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
 import type { ComposeWithPaginationOpts } from './composeWithPagination';
-import preparePaginationType from './types/paginationType';
+import { preparePaginationTC } from './types/preparePaginationType';
 
 const DEFAULT_PER_PAGE = 20;
 
@@ -98,7 +98,7 @@ export function preparePaginationResolver(
   }
 
   return new tc.constructor.schemaComposer.Resolver({
-    type: preparePaginationType(tc),
+    type: preparePaginationTC(tc),
     name: 'pagination',
     kind: 'query',
     args: {
@@ -113,7 +113,7 @@ export function preparePaginationResolver(
       },
       ...(additionalArgs: any),
     },
-    // eslint-disable-next-line
+    // prettier-ignore
     resolve: async /* :: <TContext> */(
       rp /* : $Shape<PaginationResolveParams<TContext>> */
     ) => {
@@ -194,6 +194,6 @@ export function preparePaginationResolver(
         };
         return result;
       });
-    },
+    }
   });
 }

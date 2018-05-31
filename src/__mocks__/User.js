@@ -2,33 +2,16 @@
 /* eslint-disable no-param-reassign */
 
 import { TypeComposer, Resolver } from 'graphql-compose';
-import {
-  GraphQLString,
-  GraphQLObjectType,
-  GraphQLInputObjectType,
-  GraphQLEnumType,
-  GraphQLInt,
-} from 'graphql-compose/lib/graphql';
+import { GraphQLEnumType } from 'graphql-compose/lib/graphql';
 
-export const UserType = new GraphQLObjectType({
-  name: 'User',
-  fields: {
-    id: {
-      type: GraphQLInt,
-    },
-    name: {
-      type: GraphQLString,
-    },
-    age: {
-      type: GraphQLInt,
-    },
-    gender: {
-      type: GraphQLString,
-    },
-  },
-});
-
-export const userTypeComposer = new TypeComposer(UserType);
+export const UserTC = TypeComposer.create(`
+  type User {
+    id: Int
+    name: String
+    age: Int
+    gender: String
+  }
+`);
 
 export const userList = [
   { id: 1, name: 'user01', age: 11, gender: 'm' },
@@ -50,17 +33,10 @@ export const userList = [
 
 const filterArgConfig = {
   name: 'filter',
-  type: new GraphQLInputObjectType({
-    name: 'FilterUserInput',
-    fields: {
-      gender: {
-        type: GraphQLString,
-      },
-      age: {
-        type: GraphQLInt,
-      },
-    },
-  }),
+  type: `input FilterUserInput {
+    gender: String
+    age: Int
+  }`,
 };
 
 function filteredUserList(list, filter = {}) {
@@ -121,7 +97,7 @@ function prepareFilterFromArgs(resolveParams = {}) {
 export const findManyResolver = new Resolver({
   name: 'findMany',
   kind: 'query',
-  type: UserType,
+  type: UserTC,
   args: {
     filter: filterArgConfig,
     sort: new GraphQLEnumType({
@@ -133,8 +109,8 @@ export const findManyResolver = new Resolver({
         AGE_DESC: { name: 'AGE_DESC', value: { age: -1 } },
       },
     }),
-    limit: GraphQLInt,
-    skip: GraphQLInt,
+    limit: 'Int',
+    skip: 'Int',
   },
   resolve: resolveParams => {
     const args = resolveParams.args || {};
@@ -155,12 +131,12 @@ export const findManyResolver = new Resolver({
     return Promise.resolve(list);
   },
 });
-userTypeComposer.setResolver('findMany', findManyResolver);
+UserTC.setResolver('findMany', findManyResolver);
 
 export const countResolver = new Resolver({
   name: 'count',
   kind: 'query',
-  type: GraphQLInt,
+  type: 'Int',
   args: {
     filter: filterArgConfig,
   },
@@ -168,4 +144,4 @@ export const countResolver = new Resolver({
     return Promise.resolve(filteredUserList(userList, prepareFilterFromArgs(resolveParams)).length);
   },
 });
-userTypeComposer.setResolver('count', countResolver);
+UserTC.setResolver('count', countResolver);

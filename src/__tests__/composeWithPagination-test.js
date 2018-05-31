@@ -1,14 +1,13 @@
 /* @flow */
 /* eslint-disable no-param-reassign */
 
-import { TypeComposer } from 'graphql-compose';
-import { GraphQLSchema, GraphQLList, graphql } from 'graphql-compose/lib/graphql';
+import { TypeComposer, schemaComposer } from 'graphql-compose';
+import { GraphQLList, graphql } from 'graphql-compose/lib/graphql';
 import { composeWithPagination } from '../composeWithPagination';
-import { userTypeComposer } from '../__mocks__/userTypeComposer';
-import { rootQueryTypeComposer as rootQueryTC } from '../__mocks__/rootQueryTypeComposer';
+import { UserTC } from '../__mocks__/User';
 
 describe('composeWithRelay', () => {
-  const userComposer = composeWithPagination(userTypeComposer, {
+  const userComposer = composeWithPagination(UserTC, {
     countResolverName: 'count',
     findResolverName: 'findMany',
     perPage: 5,
@@ -28,7 +27,7 @@ describe('composeWithRelay', () => {
 
     it('should throw error if options are empty', () => {
       expect(() => {
-        const args: any = [userTypeComposer];
+        const args: any = [UserTC];
         composeWithPagination(...args);
       }).toThrowError('should provide non-empty options');
     });
@@ -69,10 +68,8 @@ describe('composeWithRelay', () => {
 
   describe('fragments fields projection of graphql-compose', () => {
     it('should return object', async () => {
-      rootQueryTC.setField('userPagination', userTypeComposer.getResolver('pagination'));
-      const schema = new GraphQLSchema({
-        query: rootQueryTC.getType(),
-      });
+      schemaComposer.Query.setField('userPagination', UserTC.getResolver('pagination'));
+      const schema = schemaComposer.buildSchema();
       const query = `{
         userPagination(page: 1, perPage: 2) {
           count,
@@ -126,17 +123,15 @@ describe('composeWithRelay', () => {
   it('should pass `countResolveParams` to top resolverParams', async () => {
     let topResolveParams: any = {};
 
-    rootQueryTC.setField(
+    schemaComposer.Query.setField(
       'userPagination',
-      userTypeComposer.getResolver('pagination').wrapResolve(next => rp => {
+      UserTC.getResolver('pagination').wrapResolve(next => rp => {
         const result = next(rp);
         topResolveParams = rp;
         return result;
       })
     );
-    const schema = new GraphQLSchema({
-      query: rootQueryTC.getType(),
-    });
+    const schema = schemaComposer.buildSchema();
     const query = `{
       userPagination(filter: { age: 45 }) {
         count
@@ -155,17 +150,15 @@ describe('composeWithRelay', () => {
   it('should pass `findManyResolveParams` to top resolverParams', async () => {
     let topResolveParams: any = {};
 
-    rootQueryTC.setField(
+    schemaComposer.Query.setField(
       'userPagination',
-      userTypeComposer.getResolver('pagination').wrapResolve(next => rp => {
+      UserTC.getResolver('pagination').wrapResolve(next => rp => {
         const result = next(rp);
         topResolveParams = rp;
         return result;
       })
     );
-    const schema = new GraphQLSchema({
-      query: rootQueryTC.getType(),
-    });
+    const schema = schemaComposer.buildSchema();
     const query = `{
       userPagination(filter: { age: 45 }) {
         count
