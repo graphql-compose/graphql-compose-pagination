@@ -65,7 +65,7 @@
     ]
   },
   "scripts": {
-    "build": "npm run build-cjs && npm run build-mjs && npm run build-flow",
+    "build": "npm run build-cjs && npm run build-mjs",
     "build-cjs": "rimraf lib && babel src --ignore __tests__,__mocks__ -d lib && COPY_TO_FOLDER=lib npm run build-flow",
     "build-mjs": "rimraf mjs && BABEL_ENV=mjs babel src --ignore __tests__,__mocks__ -d mjs && yarn build-mjs-rename && COPY_TO_FOLDER=mjs npm run build-flow",
     "build-mjs-rename": "find ./mjs -name \"*.js\" -exec bash -c 'mv \"$1\" \"${1%.js}\".mjs' - '{}' \\;",
