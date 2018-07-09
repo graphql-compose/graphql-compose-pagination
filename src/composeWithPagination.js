@@ -1,13 +1,7 @@
 /* @flow */
 
 import { TypeComposer } from 'graphql-compose';
-import { preparePaginationResolver } from './paginationResolver';
-
-export type ComposeWithPaginationOpts = {
-  findResolverName: string,
-  countResolverName: string,
-  perPage?: number,
-};
+import { preparePaginationResolver, type ComposeWithPaginationOpts } from './paginationResolver';
 
 export function composeWithPagination(
   typeComposer: TypeComposer,

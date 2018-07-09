@@ -8,10 +8,15 @@ import type {
   ProjectionType,
 } from 'graphql-compose';
 import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
-import type { ComposeWithPaginationOpts } from './composeWithPagination';
 import { preparePaginationTC } from './types/preparePaginationType';
 
 const DEFAULT_PER_PAGE = 20;
+
+export type ComposeWithPaginationOpts = {
+  findResolverName: string,
+  countResolverName: string,
+  perPage?: number,
+};
 
 export type PaginationResolveParams<TContext> = {
   source: any,
