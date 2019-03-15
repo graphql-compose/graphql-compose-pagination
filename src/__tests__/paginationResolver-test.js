@@ -20,11 +20,11 @@ describe('paginationResolver', () => {
       expect(paginationResolver).toBeInstanceOf(Resolver);
     });
 
-    it('should throw error if first arg is not TypeComposer', () => {
+    it('should throw error if first arg is not ObjectTypeComposer', () => {
       expect(() => {
         const args: any = [123];
         preparePaginationResolver(...args);
-      }).toThrowError('should be instance of TypeComposer');
+      }).toThrowError('should be instance of ObjectTypeComposer');
     });
 
     it('should throw error if opts.countResolverName are empty', () => {

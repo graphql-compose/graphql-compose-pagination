@@ -1,10 +1,12 @@
 /* @flow */
 /* eslint-disable arrow-body-style */
 
-import { upperFirst, type TypeComposer, type SchemaComposer } from 'graphql-compose';
+import { upperFirst, type ObjectTypeComposer, type SchemaComposer } from 'graphql-compose';
 
-export function preparePaginationInfoTC(schemaComposer: SchemaComposer<any>): TypeComposer {
-  return schemaComposer.getOrCreateTC('PaginationInfo', tc => {
+export function preparePaginationInfoTC<TContext>(
+  schemaComposer: SchemaComposer<TContext>
+): ObjectTypeComposer<any, TContext> {
+  return schemaComposer.getOrCreateOTC('PaginationInfo', tc => {
     tc.setDescription('Information about pagination.');
     tc.addFields({
       currentPage: {
@@ -35,17 +37,19 @@ export function preparePaginationInfoTC(schemaComposer: SchemaComposer<any>): Ty
   });
 }
 
-export function preparePaginationTC(tc: TypeComposer, resolverName: ?string): TypeComposer {
-  const schemaComposer = tc.constructor.schemaComposer;
-
+export function preparePaginationTC<TSource, TContext>(
+  tc: ObjectTypeComposer<TSource, TContext>,
+  resolverName: ?string
+): ObjectTypeComposer<TSource, TContext> {
+  const schemaComposer = tc.schemaComposer;
   const name = `${tc.getTypeName()}${upperFirst(resolverName || 'pagination')}`;
   const type = tc.getType();
 
   if (schemaComposer.has(name)) {
-    return schemaComposer.getTC(name);
+    return schemaComposer.getOTC(name);
   }
 
-  const paginationTC = schemaComposer.TypeComposer.create({
+  const paginationTC = schemaComposer.createObjectTC({
     name,
     description: 'List of items with pagination.',
     fields: {

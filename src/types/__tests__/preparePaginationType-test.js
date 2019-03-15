@@ -1,13 +1,13 @@
 /* @flow */
 
-import { TypeComposer } from 'graphql-compose';
+import { ObjectTypeComposer } from 'graphql-compose';
 import { GraphQLNonNull, getNamedType, GraphQLInt, GraphQLList } from 'graphql-compose/lib/graphql';
 import { UserTC } from '../../__mocks__/User';
 import { preparePaginationTC, preparePaginationInfoTC } from '../preparePaginationType';
 
 describe('preparePaginationTC()', () => {
-  it('should return TypeComposer', () => {
-    expect(preparePaginationTC(UserTC)).toBeInstanceOf(TypeComposer);
+  it('should return ObjectTypeComposer', () => {
+    expect(preparePaginationTC(UserTC)).toBeInstanceOf(ObjectTypeComposer);
   });
 
   it('should return the same Type object when called again', () => {
@@ -38,7 +38,7 @@ describe('preparePaginationTC()', () => {
   });
 
   it('should have field `pageInfo` with GraphQLNonNull(PaginationInfoType)', () => {
-    const PaginationInfoTC = preparePaginationInfoTC(UserTC.constructor.schemaComposer);
+    const PaginationInfoTC = preparePaginationInfoTC(UserTC.schemaComposer);
     const tc = preparePaginationTC(UserTC);
     expect(tc.getFieldType('pageInfo')).toBeInstanceOf(GraphQLNonNull);
 
@@ -61,7 +61,7 @@ describe('preparePaginationTC()', () => {
     expect(connectionType.ofType).toEqual(UserTC.getType());
   });
 
-  it('should return same type for same Type in TypeComposer', () => {
+  it('should return same type for same Type in ObjectTypeComposer', () => {
     const t1 = preparePaginationTC(UserTC);
     const t2 = preparePaginationTC(UserTC);
     expect(t1).toEqual(t2);

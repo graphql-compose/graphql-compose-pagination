@@ -1,18 +1,20 @@
 /* @flow */
 
-import { TypeComposer } from 'graphql-compose';
+import { ObjectTypeComposer } from 'graphql-compose';
 import {
   preparePaginationResolver,
   type ComposeWithPaginationOpts,
   DEFAULT_RESOLVER_NAME,
 } from './paginationResolver';
 
-export function composeWithPagination(
-  typeComposer: TypeComposer,
+export function composeWithPagination<TSource, TContext>(
+  typeComposer: ObjectTypeComposer<TSource, TContext>,
   opts: ComposeWithPaginationOpts
-): TypeComposer {
-  if (!typeComposer || typeComposer.constructor.name !== 'TypeComposer') {
-    throw new Error('You should provide TypeComposer instance to composeWithPagination method');
+): ObjectTypeComposer<TSource, TContext> {
+  if (!typeComposer || typeComposer.constructor.name !== 'ObjectTypeComposer') {
+    throw new Error(
+      'You should provide ObjectTypeComposer instance to composeWithPagination method'
+    );
   }
 
   if (!opts) {
