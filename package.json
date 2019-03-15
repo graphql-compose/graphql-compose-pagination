@@ -76,7 +76,7 @@
     "flow": "./node_modules/.bin/flow",
     "test": "npm run coverage && npm run lint && npm run flow",
     "link": "yarn build && yarn link graphql-compose && yarn link",
-    "unlink": "yarn unlink graphql-compose && yarn add graphql-compose",
+    "unlink": "rimraf node_modules && yarn install",
     "semantic-release": "semantic-release"
   }
 }
