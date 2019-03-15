@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable no-param-reassign */
 
-import { TypeComposer, schemaComposer } from 'graphql-compose';
+import { ObjectTypeComposer, schemaComposer } from 'graphql-compose';
 import { GraphQLList, graphql } from 'graphql-compose/lib/graphql';
 import { composeWithPagination } from '../composeWithPagination';
 import { UserTC } from '../__mocks__/User';
@@ -14,15 +14,15 @@ describe('composeWithRelay', () => {
   });
 
   describe('basic checks', () => {
-    it('should return TypeComposer', () => {
-      expect(userComposer).toBeInstanceOf(TypeComposer);
+    it('should return ObjectTypeComposer', () => {
+      expect(userComposer).toBeInstanceOf(ObjectTypeComposer);
     });
 
-    it('should throw error if first arg is not TypeComposer', () => {
+    it('should throw error if first arg is not ObjectTypeComposer', () => {
       expect(() => {
         const args: any = [123];
         composeWithPagination(...args);
-      }).toThrowError('should provide TypeComposer instance');
+      }).toThrowError('should provide ObjectTypeComposer instance');
     });
 
     it('should throw error if options are empty', () => {
@@ -33,7 +33,7 @@ describe('composeWithRelay', () => {
     });
 
     it('should not change `pagination` resolver if exists', () => {
-      let myTC = TypeComposer.create('type Complex { a: String, b: Int }');
+      let myTC = schemaComposer.createObjectTC('type Complex { a: String, b: Int }');
       myTC.addResolver({
         name: 'pagination',
         resolve: () => 'mockData',
@@ -46,11 +46,11 @@ describe('composeWithRelay', () => {
       });
 
       expect(myTC.getResolver('pagination')).toBeTruthy();
-      expect(myTC.getResolver('pagination').resolve()).toBe('mockData');
+      expect(myTC.getResolver('pagination').resolve({})).toBe('mockData');
     });
 
     it('should add resolver with user-specified name', () => {
-      let myTC = TypeComposer.create('type CustomComplex { a: String, b: Int }');
+      let myTC = schemaComposer.createObjectTC('type CustomComplex { a: String, b: Int }');
       myTC.addResolver({
         name: 'count',
         resolve: () => 1,
@@ -70,7 +70,7 @@ describe('composeWithRelay', () => {
     });
 
     it('should add two connection resolvers', () => {
-      let myTC = TypeComposer.create('type CustomComplex { a: String, b: Int }');
+      let myTC = schemaComposer.createObjectTC('type CustomComplex { a: String, b: Int }');
       myTC.addResolver({
         name: 'count',
         resolve: () => 1,
@@ -97,7 +97,7 @@ describe('composeWithRelay', () => {
   describe('check `pagination` resolver props', () => {
     const rsv = userComposer.getResolver('pagination');
     const type: any = rsv.getType();
-    const tc = new TypeComposer(type);
+    const tc = schemaComposer.createObjectTC(type);
 
     it('should exists', () => {
       expect(rsv).toBeTruthy();

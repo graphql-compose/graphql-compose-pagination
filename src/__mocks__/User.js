@@ -1,9 +1,9 @@
 /* @flow */
 /* eslint-disable no-param-reassign */
 
-import { TypeComposer, Resolver, EnumTypeComposer } from 'graphql-compose';
+import { schemaComposer } from 'graphql-compose';
 
-export const UserTC = TypeComposer.create(`
+export const UserTC = schemaComposer.createObjectTC(`
   type User {
     id: Int
     name: String
@@ -93,13 +93,13 @@ function prepareFilterFromArgs(resolveParams = {}) {
   return filter;
 }
 
-export const findManyResolver = new Resolver({
+export const findManyResolver = schemaComposer.createResolver({
   name: 'findMany',
   kind: 'query',
   type: UserTC,
   args: {
     filter: filterArgConfig,
-    sort: EnumTypeComposer.create({
+    sort: schemaComposer.createEnumTC({
       name: 'SortUserInput',
       values: {
         ID_ASC: { value: { id: 1 } },
@@ -132,7 +132,7 @@ export const findManyResolver = new Resolver({
 });
 UserTC.setResolver('findMany', findManyResolver);
 
-export const countResolver = new Resolver({
+export const countResolver = schemaComposer.createResolver({
   name: 'count',
   kind: 'query',
   type: 'Int',
