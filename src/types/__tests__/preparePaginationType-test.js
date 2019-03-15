@@ -38,7 +38,7 @@ describe('preparePaginationTC()', () => {
   });
 
   it('should have field `pageInfo` with GraphQLNonNull(PaginationInfoType)', () => {
-    const PaginationInfoTC = preparePaginationInfoTC(UserTC.sc);
+    const PaginationInfoTC = preparePaginationInfoTC(UserTC.schemaComposer);
     const tc = preparePaginationTC(UserTC);
     expect(tc.getFieldType('pageInfo')).toBeInstanceOf(GraphQLNonNull);
 

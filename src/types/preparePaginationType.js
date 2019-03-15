@@ -41,7 +41,7 @@ export function preparePaginationTC<TSource, TContext>(
   tc: ObjectTypeComposer<TSource, TContext>,
   resolverName: ?string
 ): ObjectTypeComposer<TSource, TContext> {
-  const schemaComposer = tc.sc;
+  const schemaComposer = tc.schemaComposer;
   const name = `${tc.getTypeName()}${upperFirst(resolverName || 'pagination')}`;
   const type = tc.getType();
 
