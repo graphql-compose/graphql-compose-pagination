@@ -3,7 +3,7 @@
 
 import type {
   Resolver,
-  TypeComposer,
+  ObjectTypeComposer,
   ResolveParams, // eslint-disable-line
   ProjectionType,
 } from 'graphql-compose';
@@ -50,26 +50,28 @@ export type PaginationInfoType = {|
   hasNextPage: boolean,
 |};
 
-export function preparePaginationResolver(
-  tc: TypeComposer,
+export function preparePaginationResolver<TSource, TContext>(
+  tc: ObjectTypeComposer<TSource, TContext>,
   opts: ComposeWithPaginationOpts
-): Resolver {
-  if (!tc || tc.constructor.name !== 'TypeComposer') {
-    throw new Error('First arg for prepareConnectionResolver() should be instance of TypeComposer');
+): Resolver<TSource, TContext> {
+  if (!tc || tc.constructor.name !== 'ObjectTypeComposer') {
+    throw new Error(
+      'First arg for prepareConnectionResolver() should be instance of ObjectTypeComposer'
+    );
   }
 
   const resolverName = opts.paginationResolverName || DEFAULT_RESOLVER_NAME;
 
   if (!opts.countResolverName) {
     throw new Error(
-      `TypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
+      `ObjectTypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
         'should have option `opts.countResolverName`.'
     );
   }
   const countResolver = tc.getResolver(opts.countResolverName);
   if (!countResolver) {
     throw new Error(
-      `TypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
+      `ObjectTypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
         `should have resolver with name '${opts.countResolverName}' ` +
         'due opts.countResolverName.'
     );
@@ -78,14 +80,14 @@ export function preparePaginationResolver(
 
   if (!opts.findResolverName) {
     throw new Error(
-      `TypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
+      `ObjectTypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
         'should have option `opts.findResolverName`.'
     );
   }
   const findManyResolver = tc.getResolver(opts.findResolverName);
   if (!findManyResolver) {
     throw new Error(
-      `TypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
+      `ObjectTypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
         `should have resolver with name '${opts.findResolverName}' ` +
         'due opts.countResolverName.'
     );
@@ -106,8 +108,8 @@ export function preparePaginationResolver(
     }
   }
 
-  return new tc.constructor.schemaComposer.Resolver({
-    type: preparePaginationTC(tc, resolverName),
+  return tc.sc.createResolver({
+    type: preparePaginationTC(tc),
     name: resolverName,
     kind: 'query',
     args: {
@@ -122,14 +124,11 @@ export function preparePaginationResolver(
       },
       ...(additionalArgs: any),
     },
-    // prettier-ignore
-    resolve: async /* :: <TContext> */(
-      rp /* : $Shape<PaginationResolveParams<TContext>> */
-    ) => {
+    resolve: async (rp: $Shape<PaginationResolveParams<TContext>>) => {
       let countPromise;
       let findManyPromise;
       const { projection = {}, args, rawQuery } = rp;
-      const findManyParams /* : $Shape<ResolveParams<any, TContext>> */ = {
+      const findManyParams: $Shape<ResolveParams<TSource, TContext, any>> = {
         ...rp,
       };
 
@@ -142,7 +141,7 @@ export function preparePaginationResolver(
         throw new Error('Argument `perPage` should be positive number.');
       }
 
-      const countParams /* : $Shape<ResolveParams<any, TContext>> */ = {
+      const countParams: $Shape<ResolveParams<TSource, TContext, any>> = {
         ...rp,
         rawQuery,
         args: {
@@ -203,6 +202,6 @@ export function preparePaginationResolver(
         };
         return result;
       });
-    }
+    },
   });
 }
