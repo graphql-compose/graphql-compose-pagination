@@ -1,7 +1,7 @@
 /* @flow */
 /* eslint-disable arrow-body-style */
 
-import type { TypeComposer, SchemaComposer } from 'graphql-compose';
+import { upperFirst, type TypeComposer, type SchemaComposer } from 'graphql-compose';
 
 export function preparePaginationInfoTC(schemaComposer: SchemaComposer<any>): TypeComposer {
   return schemaComposer.getOrCreateTC('PaginationInfo', tc => {
@@ -35,9 +35,10 @@ export function preparePaginationInfoTC(schemaComposer: SchemaComposer<any>): Ty
   });
 }
 
-export function preparePaginationTC(tc: TypeComposer): TypeComposer {
+export function preparePaginationTC(tc: TypeComposer, resolverName: ?string): TypeComposer {
   const schemaComposer = tc.constructor.schemaComposer;
-  const name = `${tc.getTypeName()}Pagination`;
+
+  const name = `${tc.getTypeName()}${upperFirst(resolverName || 'pagination')}`;
   const type = tc.getType();
 
   if (schemaComposer.has(name)) {

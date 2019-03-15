@@ -10,8 +10,26 @@ describe('preparePaginationTC()', () => {
     expect(preparePaginationTC(UserTC)).toBeInstanceOf(TypeComposer);
   });
 
+  it('should return the same Type object when called again', () => {
+    const firstPaginationType = preparePaginationTC(UserTC);
+    const secondPaginationType = preparePaginationTC(UserTC);
+    expect(firstPaginationType).toBe(secondPaginationType);
+  });
+
+  it('should return a separate GraphQLObjectType with a different name', () => {
+    const paginationType = preparePaginationTC(UserTC);
+    const otherPaginationType = preparePaginationTC(UserTC, 'otherPagination');
+    expect(paginationType).not.toBe(otherPaginationType);
+  });
+
   it('should have name ending with `Pagination`', () => {
     expect(preparePaginationTC(UserTC).getTypeName()).toBe('UserPagination');
+  });
+
+  it('should have name ending with `OtherPagination` when passed lowercase otherPagination', () => {
+    expect(preparePaginationTC(UserTC, 'otherConnection').getTypeName()).toBe(
+      'UserOtherConnection'
+    );
   });
 
   it('should have field `count` with provided Type', () => {

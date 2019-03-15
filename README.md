@@ -29,8 +29,10 @@ import composeWithPagination from 'graphql-compose-pagination';
 import userTypeComposer from './user.js';
 
 composeWithPagination(userTypeComposer, {
+  paginationResolverName: 'pagination', // Default
   findResolverName: 'findMany',
   countResolverName: 'count',
+  perPage: 20, // Default
 });
 ```
 

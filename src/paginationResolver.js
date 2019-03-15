@@ -10,9 +10,11 @@ import type {
 import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
 import { preparePaginationTC } from './types/preparePaginationType';
 
-const DEFAULT_PER_PAGE = 20;
+export const DEFAULT_RESOLVER_NAME = 'pagination';
+export const DEFAULT_PER_PAGE = 20;
 
 export type ComposeWithPaginationOpts = {
+  paginationResolverName?: string,
   findResolverName: string,
   countResolverName: string,
   perPage?: number,
@@ -55,6 +57,8 @@ export function preparePaginationResolver(
   if (!tc || tc.constructor.name !== 'TypeComposer') {
     throw new Error('First arg for prepareConnectionResolver() should be instance of TypeComposer');
   }
+
+  const resolverName = opts.paginationResolverName || DEFAULT_RESOLVER_NAME;
 
   if (!opts.countResolverName) {
     throw new Error(
@@ -103,8 +107,8 @@ export function preparePaginationResolver(
   }
 
   return new tc.constructor.schemaComposer.Resolver({
-    type: preparePaginationTC(tc),
-    name: 'pagination',
+    type: preparePaginationTC(tc, resolverName),
+    name: resolverName,
     kind: 'query',
     args: {
       page: {

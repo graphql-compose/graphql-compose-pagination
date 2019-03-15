@@ -48,6 +48,50 @@ describe('composeWithRelay', () => {
       expect(myTC.getResolver('pagination')).toBeTruthy();
       expect(myTC.getResolver('pagination').resolve()).toBe('mockData');
     });
+
+    it('should add resolver with user-specified name', () => {
+      let myTC = TypeComposer.create('type CustomComplex { a: String, b: Int }');
+      myTC.addResolver({
+        name: 'count',
+        resolve: () => 1,
+      });
+      myTC.addResolver({
+        name: 'findMany',
+        resolve: () => ['mockData'],
+      });
+      myTC = composeWithPagination(myTC, {
+        paginationResolverName: 'customPagination',
+        countResolverName: 'count',
+        findResolverName: 'findMany',
+      });
+
+      expect(myTC.getResolver('customPagination')).toBeTruthy();
+      expect(myTC.hasResolver('pagination')).toBeFalsy();
+    });
+
+    it('should add two connection resolvers', () => {
+      let myTC = TypeComposer.create('type CustomComplex { a: String, b: Int }');
+      myTC.addResolver({
+        name: 'count',
+        resolve: () => 1,
+      });
+      myTC.addResolver({
+        name: 'findMany',
+        resolve: () => ['mockData'],
+      });
+      myTC = composeWithPagination(myTC, {
+        countResolverName: 'count',
+        findResolverName: 'findMany',
+      });
+      myTC = composeWithPagination(myTC, {
+        paginationResolverName: 'customPagination',
+        countResolverName: 'count',
+        findResolverName: 'findMany',
+      });
+
+      expect(myTC.hasResolver('pagination')).toBeTruthy();
+      expect(myTC.getResolver('customPagination')).toBeTruthy();
+    });
   });
 
   describe('check `pagination` resolver props', () => {
