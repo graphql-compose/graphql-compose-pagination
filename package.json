@@ -5,10 +5,12 @@
   "files": [
     "lib",
     "mjs",
-    "README.md"
+    "README.md",
+    "types"
   ],
   "main": "lib/index.js",
   "module": "mjs/index.mjs",
+  "types": "types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/graphql-compose/graphql-compose-pagination.git"
@@ -36,6 +38,7 @@
     "@babel/plugin-transform-runtime": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "@babel/preset-flow": "^7.0.0",
+    "@types/graphql": "^14.0.7",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.7.1",
@@ -52,7 +55,9 @@
     "jest": "^24.7.1",
     "prettier": "^1.16.4",
     "rimraf": "^2.6.3",
-    "semantic-release": "^15.13.3"
+    "semantic-release": "^15.13.3",
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.4000"
   },
   "config": {
     "commitizen": {
@@ -73,8 +78,10 @@
     "watch": "jest --watch",
     "coverage": "jest --coverage",
     "lint": "eslint --ext .js ./src",
+    "tslint": "tslint -p . \"types/**/*.d.ts\"",
+    "check-ts": "tsc",
     "flow": "./node_modules/.bin/flow",
-    "test": "npm run coverage && npm run lint && npm run flow",
+    "test": "npm run coverage && npm run lint && npm run flow && npm run check-ts",
     "link": "yarn build && yarn link graphql-compose && yarn link",
     "unlink": "rimraf node_modules && yarn install",
     "semantic-release": "semantic-release"
