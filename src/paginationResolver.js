@@ -4,7 +4,7 @@
 import type {
   Resolver,
   ObjectTypeComposer,
-  ResolveParams, // eslint-disable-line
+  ResolverResolveParams, // eslint-disable-line
   ProjectionType,
 } from 'graphql-compose';
 import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
@@ -128,9 +128,6 @@ export function preparePaginationResolver<TSource, TContext>(
       let countPromise;
       let findManyPromise;
       const { projection = {}, args, rawQuery } = rp;
-      const findManyParams: $Shape<ResolveParams<TSource, TContext, any>> = {
-        ...rp,
-      };
 
       const page = parseInt(args.page, 10) || 1;
       if (page <= 0) {
@@ -141,10 +138,11 @@ export function preparePaginationResolver<TSource, TContext>(
         throw new Error('Argument `perPage` should be positive number.');
       }
 
-      const countParams: $Shape<ResolveParams<TSource, TContext, any>> = {
+      const countParams: $Shape<ResolverResolveParams<TSource, TContext, any>> = {
         ...rp,
         rawQuery,
         args: {
+          ...rp.args,
           filter: { ...rp.args.filter },
         },
       };
@@ -157,6 +155,10 @@ export function preparePaginationResolver<TSource, TContext>(
       } else {
         countPromise = Promise.resolve(0);
       }
+
+      const findManyParams: $Shape<ResolverResolveParams<TSource, TContext, any>> = {
+        ...rp,
+      };
 
       if (projection && projection.items) {
         // combine top level projection

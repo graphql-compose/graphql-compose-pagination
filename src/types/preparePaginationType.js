@@ -43,7 +43,6 @@ export function preparePaginationTC<TSource, TContext>(
 ): ObjectTypeComposer<TSource, TContext> {
   const schemaComposer = tc.schemaComposer;
   const name = `${tc.getTypeName()}${upperFirst(resolverName || 'pagination')}`;
-  const type = tc.getType();
 
   if (schemaComposer.has(name)) {
     return schemaComposer.getOTC(name);
@@ -67,11 +66,6 @@ export function preparePaginationTC<TSource, TContext>(
       },
     },
   });
-
-  // This is small HACK for providing to graphql-compose/src/projection.js
-  // information about required fields in projection and relations
-  // $FlowFixMe
-  paginationTC.gqType.ofType = type;
 
   return paginationTC;
 }

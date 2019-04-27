@@ -16,6 +16,7 @@ describe('composeWithRelay', () => {
   describe('basic checks', () => {
     it('should return ObjectTypeComposer', () => {
       expect(userComposer).toBeInstanceOf(ObjectTypeComposer);
+      expect(userComposer).toBe(UserTC);
     });
 
     it('should throw error if first arg is not ObjectTypeComposer', () => {
@@ -165,8 +166,8 @@ describe('composeWithRelay', () => {
   });
 
   it('should pass `countResolveParams` to top resolverParams', async () => {
+    // first build
     let topResolveParams: any = {};
-
     schemaComposer.Query.setField(
       'userPagination',
       UserTC.getResolver('pagination').wrapResolve(next => rp => {
@@ -181,13 +182,41 @@ describe('composeWithRelay', () => {
         count
       }
     }`;
-    await graphql(schema, query);
-
+    const res = await graphql(schema, query);
+    expect(res).toEqual({ data: { userPagination: { count: 15 } } });
     expect(Object.keys(topResolveParams.countResolveParams)).toEqual(
       expect.arrayContaining(['source', 'args', 'context', 'info', 'projection'])
     );
     expect(topResolveParams.countResolveParams.args).toEqual({
       filter: { age: 45 },
+      perPage: 5,
+    });
+
+    // second build
+    let topResolveParams2: any = {};
+    schemaComposer.Query.setField(
+      'userPagination',
+      UserTC.getResolver('pagination').wrapResolve(next => rp => {
+        const result = next(rp);
+        topResolveParams2 = rp;
+        return result;
+      })
+    );
+
+    const schema2 = schemaComposer.buildSchema();
+    const query2 = `{
+      userPagination(filter: { age: 333 }) {
+        count
+      }
+    }`;
+    const res2 = await graphql(schema2, query2);
+    expect(res2).toEqual({ data: { userPagination: { count: 15 } } });
+    expect(Object.keys(topResolveParams2.countResolveParams)).toEqual(
+      expect.arrayContaining(['source', 'args', 'context', 'info', 'projection'])
+    );
+    expect(topResolveParams2.countResolveParams.args).toEqual({
+      filter: { age: 333 },
+      perPage: 5,
     });
   });
 
@@ -204,18 +233,19 @@ describe('composeWithRelay', () => {
     );
     const schema = schemaComposer.buildSchema();
     const query = `{
-      userPagination(filter: { age: 45 }) {
+      userPagination(filter: { age: 55 }) {
         count
       }
     }`;
-    await graphql(schema, query);
+    const res = await graphql(schema, query);
+    expect(res).toEqual({ data: { userPagination: { count: 15 } } });
 
     expect(Object.keys(topResolveParams.findManyResolveParams)).toEqual(
       expect.arrayContaining(['source', 'args', 'context', 'info', 'projection'])
     );
 
     expect(topResolveParams.findManyResolveParams.args).toEqual({
-      filter: { age: 45 },
+      filter: { age: 55 },
       limit: 6,
       perPage: 5,
     });
