@@ -15,14 +15,10 @@
     "import/no-extraneous-dependencies": 0,
     "import/prefer-default-export": 0,
     "import/no-cycle": 0,
-    "prettier/prettier": ["error", {
-      "printWidth": 100,
-      "singleQuote": true,
-      "trailingComma": "es5",
-    }],
+    "prettier/prettier": ["error"],
     "no-unused-expressions": 0,
     "no-restricted-syntax": 0,
-    "prefer-destructuring": 0,
+    "prefer-destructuring": 0
   },
   "env": {
     "jasmine": true,
@@ -30,10 +26,10 @@
   },
   "globals": {
     "Class": true,
-    "$Shape": true,
+    "$Shape": true
   },
   "plugins": [
     "flowtype",
     "prettier"
-  ],
+  ]
 }
