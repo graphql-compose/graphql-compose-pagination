@@ -54,13 +54,6 @@ describe('preparePaginationTC()', () => {
     expect(items.name).toEqual('User');
   });
 
-  it('should have `ofType` property (like GraphQLList, GraphQLNonNull)', () => {
-    // this behavior needed for `graphql-compose` module in `projection` helper
-    // otherwise it incorrectly construct projectionMapper for tricky fields
-    const connectionType: any = preparePaginationTC(UserTC).getType();
-    expect(connectionType.ofType).toEqual(UserTC.getType());
-  });
-
   it('should return same type for same Type in ObjectTypeComposer', () => {
     const t1 = preparePaginationTC(UserTC);
     const t2 = preparePaginationTC(UserTC);

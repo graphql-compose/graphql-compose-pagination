@@ -337,7 +337,12 @@ describe('paginationResolver', () => {
       expect(spyCountResolve.mock.calls).toEqual([
         [
           {
-            args: { filter: {} },
+            args: {
+              filter: {},
+              sort: {
+                _id: 1,
+              },
+            },
             projection: { count: true, items: { name: true } },
             rawQuery: undefined,
           },
