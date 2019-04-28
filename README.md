@@ -47,7 +47,7 @@ Types should have following resolvers:
 
 ## Used in plugins
 
-[graphql-compose-mongoose](https://github.com/graphql-compose/graphql-compose-mongoose) - converts mongoose models to graphql types
+[graphql-compose-mongoose](https://github.com/graphql-compose/graphql-compose-mongoose) – converts mongoose models to graphql types
 
 ## License
 
