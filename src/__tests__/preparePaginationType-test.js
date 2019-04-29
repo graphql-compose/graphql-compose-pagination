@@ -2,7 +2,7 @@
 
 import { ObjectTypeComposer } from 'graphql-compose';
 import { GraphQLNonNull, getNamedType, GraphQLInt, GraphQLList } from 'graphql-compose/lib/graphql';
-import { UserTC } from '../../__mocks__/User';
+import { UserTC } from '../__mocks__/User';
 import { preparePaginationTC, preparePaginationInfoTC } from '../preparePaginationType';
 
 describe('preparePaginationTC()', () => {

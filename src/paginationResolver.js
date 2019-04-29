@@ -8,7 +8,7 @@ import type {
   ProjectionType,
 } from 'graphql-compose';
 import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
-import { preparePaginationTC } from './types/preparePaginationType';
+import { preparePaginationTC } from './preparePaginationType';
 
 export const DEFAULT_RESOLVER_NAME = 'pagination';
 export const DEFAULT_PER_PAGE = 20;

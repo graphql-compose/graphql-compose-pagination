@@ -1,40 +1,41 @@
 /* @flow */
 /* eslint-disable arrow-body-style */
 
-import { upperFirst, type ObjectTypeComposer, type SchemaComposer } from 'graphql-compose';
+import { upperFirst, ObjectTypeComposer, type SchemaComposer } from 'graphql-compose';
+
+// PaginationInfo should be global
+const PaginationInfoTC = ObjectTypeComposer.createTemp(`
+# Information about pagination.
+type PaginationInfo {
+  # Current page number
+  currentPage: Int!
+  
+  # Number of items per page
+  perPage: Int!
+  
+  # Total number of pages
+  pageCount: Int
+  
+  # Total number of items
+  itemCount: Int
+  
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean
+  
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean
+}
+`);
 
 export function preparePaginationInfoTC<TContext>(
-  schemaComposer: SchemaComposer<TContext>
+  sc: SchemaComposer<TContext>
 ): ObjectTypeComposer<any, TContext> {
-  return schemaComposer.getOrCreateOTC('PaginationInfo', tc => {
-    tc.setDescription('Information about pagination.');
-    tc.addFields({
-      currentPage: {
-        type: 'Int!',
-        description: 'Current page number',
-      },
-      perPage: {
-        type: 'Int!',
-        description: 'Number of items per page',
-      },
-      pageCount: {
-        type: 'Int',
-        description: 'Total number of pages',
-      },
-      itemCount: {
-        type: 'Int',
-        description: 'Total number of items',
-      },
-      hasNextPage: {
-        type: 'Boolean',
-        description: 'When paginating forwards, are there more items?',
-      },
-      hasPreviousPage: {
-        type: 'Boolean',
-        description: 'When paginating backwards, are there more items?',
-      },
-    });
-  });
+  // Pagination Info can be overrided via SchemaComposer registry
+  if (sc.hasInstance('PaginationInfo', ObjectTypeComposer)) {
+    return (sc.get('PaginationInfo'): any);
+  }
+  sc.set('PaginationInfo', (PaginationInfoTC: any));
+  return (PaginationInfoTC: any);
 }
 
 export function preparePaginationTC<TSource, TContext>(
