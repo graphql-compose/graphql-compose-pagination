@@ -116,7 +116,7 @@ describe('composeWithRelay', () => {
       schemaComposer.Query.setField('userPagination', UserTC.getResolver('pagination'));
       const schema = schemaComposer.buildSchema();
       const query = `{
-        userPagination(page: 1, perPage: 2) {
+        userPagination(page: 1, perPage: 2, sort: ID_ASC) {
           count,
           pageInfo {
             currentPage
@@ -148,8 +148,8 @@ describe('composeWithRelay', () => {
           userPagination: {
             count: 15,
             items: [
-              { age: 18, gender: 'm', id: 8, name: 'user08' },
               { age: 11, gender: 'm', id: 1, name: 'user01' },
+              { age: 12, gender: 'm', id: 2, name: 'user02' },
             ],
             pageInfo: {
               currentPage: 1,
