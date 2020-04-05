@@ -170,7 +170,7 @@ describe('composeWithRelay', () => {
     let topResolveParams: any = {};
     schemaComposer.Query.setField(
       'userPagination',
-      UserTC.getResolver('pagination').wrapResolve(next => rp => {
+      UserTC.getResolver('pagination').wrapResolve((next) => (rp) => {
         const result = next(rp);
         topResolveParams = rp;
         return result;
@@ -196,7 +196,7 @@ describe('composeWithRelay', () => {
     let topResolveParams2: any = {};
     schemaComposer.Query.setField(
       'userPagination',
-      UserTC.getResolver('pagination').wrapResolve(next => rp => {
+      UserTC.getResolver('pagination').wrapResolve((next) => (rp) => {
         const result = next(rp);
         topResolveParams2 = rp;
         return result;
@@ -225,7 +225,7 @@ describe('composeWithRelay', () => {
 
     schemaComposer.Query.setField(
       'userPagination',
-      UserTC.getResolver('pagination').wrapResolve(next => rp => {
+      UserTC.getResolver('pagination').wrapResolve((next) => (rp) => {
         const result = next(rp);
         topResolveParams = rp;
         return result;

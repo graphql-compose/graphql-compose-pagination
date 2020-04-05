@@ -93,12 +93,14 @@ describe('paginationResolver', () => {
     beforeEach(() => {
       findManyResolverCalled = false;
       countResolverCalled = false;
-      const mockedFindMany = UserTC.getResolver('findMany').wrapResolve(next => resolveParams => {
-        findManyResolverCalled = true;
-        spyResolveParams = resolveParams;
-        return next(resolveParams);
-      });
-      const mockedCount = UserTC.getResolver('findMany').wrapResolve(next => resolveParams => {
+      const mockedFindMany = UserTC.getResolver('findMany').wrapResolve(
+        (next) => (resolveParams) => {
+          findManyResolverCalled = true;
+          spyResolveParams = resolveParams;
+          return next(resolveParams);
+        }
+      );
+      const mockedCount = UserTC.getResolver('findMany').wrapResolve((next) => (resolveParams) => {
         countResolverCalled = true;
         spyResolveParams = resolveParams;
         return next(resolveParams);
