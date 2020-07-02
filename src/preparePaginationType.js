@@ -58,7 +58,7 @@ export function preparePaginationTC<TSource, TContext>(
         description: 'Total object count.',
       },
       items: {
-        type: () => [tc],
+        type: () => tc.getTypeNonNull().getTypePlural(),
         description: 'Array of objects.',
       },
       pageInfo: {
