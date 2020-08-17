@@ -1,6 +1,3 @@
-/* @flow */
-/* eslint-disable no-param-reassign */
-
 import { ObjectTypeComposer, schemaComposer } from 'graphql-compose';
 import { GraphQLList, graphql } from 'graphql-compose/lib/graphql';
 import { composeWithPagination } from '../composeWithPagination';
@@ -21,15 +18,17 @@ describe('composeWithRelay', () => {
 
     it('should throw error if first arg is not ObjectTypeComposer', () => {
       expect(() => {
-        const args: any = [123];
-        composeWithPagination(...args);
+        const wrongArgs = [123];
+        // @ts-expect-error
+        composeWithPagination(...wrongArgs);
       }).toThrowError('should provide ObjectTypeComposer instance');
     });
 
     it('should throw error if options are empty', () => {
       expect(() => {
-        const args: any = [UserTC];
-        composeWithPagination(...args);
+        const wrongArgs = [UserTC];
+        // @ts-expect-error
+        composeWithPagination(...wrongArgs);
       }).toThrowError('should provide non-empty options');
     });
 

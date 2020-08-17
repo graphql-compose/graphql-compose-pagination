@@ -1,7 +1,4 @@
-/* @flow */
-/* eslint-disable no-param-reassign */
-
-import { schemaComposer } from 'graphql-compose';
+import { schemaComposer, ResolverResolveParams } from 'graphql-compose';
 
 export const UserTC = schemaComposer.createObjectTC(`
   type User {
@@ -38,7 +35,7 @@ const filterArgConfig = {
   }`,
 };
 
-function filteredUserList(list, filter = {}) {
+function filteredUserList(list: typeof userList, filter = {} as any) {
   let result = list.slice();
   if (filter.gender) {
     result = result.filter((o) => o.gender === filter.gender);
@@ -64,8 +61,11 @@ function filteredUserList(list, filter = {}) {
   return result;
 }
 
-function sortUserList(list, sortValue = {}) {
-  const fields = Object.keys(sortValue);
+function sortUserList(
+  list: typeof userList,
+  sortValue = {} as Record<keyof typeof userList[0], number>
+) {
+  const fields = Object.keys(sortValue) as Array<keyof typeof userList[0]>;
   list.sort((a, b) => {
     let result = 0;
     fields.forEach((field) => {
@@ -82,7 +82,7 @@ function sortUserList(list, sortValue = {}) {
   return list;
 }
 
-function prepareFilterFromArgs(resolveParams = {}) {
+function prepareFilterFromArgs(resolveParams = {} as ResolverResolveParams<any, any>) {
   const args = resolveParams.args || {};
   const filter = { ...args.filter };
   if (resolveParams.rawQuery) {
@@ -116,15 +116,15 @@ export const findManyResolver = schemaComposer.createResolver({
     const { sort, limit, skip } = args;
 
     let list = userList.slice();
-    list = sortUserList(list, sort);
+    list = sortUserList(list, sort as any);
     list = filteredUserList(list, prepareFilterFromArgs(resolveParams));
 
     if (skip) {
-      list = list.slice(skip);
+      list = list.slice(skip as any);
     }
 
     if (limit) {
-      list = list.slice(0, limit);
+      list = list.slice(0, limit as any);
     }
 
     return Promise.resolve(list);

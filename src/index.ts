@@ -1,5 +1,3 @@
-/* @flow */
-
 import { composeWithPagination } from './composeWithPagination';
 import { preparePaginationResolver } from './paginationResolver';
 

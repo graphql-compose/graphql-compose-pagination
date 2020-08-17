@@ -1,7 +1,4 @@
-/* @flow */
-/* eslint-disable no-param-reassign */
-
-import { Resolver } from 'graphql-compose';
+import { Resolver, ResolverResolveParams } from 'graphql-compose';
 import { GraphQLInt } from 'graphql-compose/lib/graphql';
 import { UserTC } from '../__mocks__/User';
 import { preparePaginationResolver } from '../paginationResolver';
@@ -22,15 +19,17 @@ describe('paginationResolver', () => {
 
     it('should throw error if first arg is not ObjectTypeComposer', () => {
       expect(() => {
-        const args: any = [123];
-        preparePaginationResolver(...args);
+        const wrongArgs = [123];
+        // @ts-expect-error
+        preparePaginationResolver(...wrongArgs);
       }).toThrowError('should be instance of ObjectTypeComposer');
     });
 
     it('should throw error if opts.countResolverName are empty', () => {
       expect(() => {
-        const args: any = [UserTC, {}];
-        preparePaginationResolver(...args);
+        const wrongArgs = [UserTC, {}];
+        // @ts-expect-error
+        preparePaginationResolver(...wrongArgs);
       }).toThrowError('should have option `opts.countResolverName`');
     });
 
@@ -45,8 +44,9 @@ describe('paginationResolver', () => {
 
     it('should throw error if opts.findResolverName are empty', () => {
       expect(() => {
-        const args: any = [UserTC, { countResolverName: 'count' }];
-        preparePaginationResolver(...args);
+        const wrongArgs = [UserTC, { countResolverName: 'count' }];
+        // @ts-expect-error
+        preparePaginationResolver(...wrongArgs);
       }).toThrowError('should have option `opts.findResolverName`');
     });
 
@@ -70,7 +70,7 @@ describe('paginationResolver', () => {
     });
 
     it('should have type to be ConnectionType', () => {
-      expect((paginationResolver.type: any).getTypeName()).toBe('UserPagination');
+      expect(paginationResolver.getTypeName()).toBe('UserPagination');
     });
   });
 
@@ -85,10 +85,10 @@ describe('paginationResolver', () => {
   });
 
   describe('call of resolvers', () => {
-    let spyResolveParams;
-    let mockedpaginationResolver;
-    let findManyResolverCalled;
-    let countResolverCalled;
+    let spyResolveParams: ResolverResolveParams<any, any>;
+    let mockedPaginationResolver: Resolver;
+    let findManyResolverCalled: boolean;
+    let countResolverCalled: boolean;
 
     beforeEach(() => {
       findManyResolverCalled = false;
@@ -107,14 +107,14 @@ describe('paginationResolver', () => {
       });
       UserTC.setResolver('mockedFindMany', mockedFindMany);
       UserTC.setResolver('mockedCount', mockedCount);
-      mockedpaginationResolver = preparePaginationResolver(UserTC, {
+      mockedPaginationResolver = preparePaginationResolver(UserTC, {
         countResolverName: 'mockedCount',
         findResolverName: 'mockedFindMany',
       });
     });
 
     it('should pass to findMany args.sort', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {
           sort: { name: 1 },
           first: 3,
@@ -127,7 +127,7 @@ describe('paginationResolver', () => {
     });
 
     it('should pass to findMany projection from `items` on top level', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {},
         projection: {
           items: {
@@ -141,7 +141,7 @@ describe('paginationResolver', () => {
     });
 
     it('should pass to findMany custom projections to top level', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {},
         projection: {
           items: true,
@@ -152,7 +152,7 @@ describe('paginationResolver', () => {
     });
 
     it('should call count but not findMany when only count is projected', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {},
         projection: {
           count: true,
@@ -163,7 +163,7 @@ describe('paginationResolver', () => {
     });
 
     it('should call count but not findMany when only pageInfo.itemCount is projected', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {},
         projection: {
           pageInfo: {
@@ -176,7 +176,7 @@ describe('paginationResolver', () => {
     });
 
     it('should call count but not findMany when only pageInfo.pageCount is projected', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {},
         projection: {
           pageInfo: {
@@ -189,7 +189,7 @@ describe('paginationResolver', () => {
     });
 
     it('should call count and findMany resolver when count and items is projected', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {},
         projection: {
           count: true,
@@ -204,7 +204,7 @@ describe('paginationResolver', () => {
     });
 
     it('should call findMany and not count when arbitrary top level fields are projected without count', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {},
         projection: {
           name: true,
@@ -216,7 +216,7 @@ describe('paginationResolver', () => {
     });
 
     it('should call findMany and count when arbitrary top level fields are projected with count', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: {},
         projection: {
           count: true,
@@ -229,7 +229,7 @@ describe('paginationResolver', () => {
     });
 
     it('should call findMany but not count resolver when first arg is used', async () => {
-      await mockedpaginationResolver.resolve({
+      await mockedPaginationResolver.resolve({
         args: { first: 1 },
         projection: {
           edges: {
@@ -246,7 +246,7 @@ describe('paginationResolver', () => {
   });
 
   describe('filter tests with resolve', () => {
-    it('should pass `filter` arg to `findResolverfindMany` and `count` resolvers', async () => {
+    it('should pass `filter` arg to `findMany` and `count` resolvers', async () => {
       spyFindManyResolve.mockClear();
       spyCountResolve.mockClear();
       await paginationResolver.resolve({
@@ -314,7 +314,7 @@ describe('paginationResolver', () => {
   });
 
   describe('sort tests with resolve', () => {
-    it('should pass `sort` arg to `findResolverfindMany` but not to `count` resolvers', async () => {
+    it('should pass `sort` arg to `findMany` but not to `count` resolvers', async () => {
       spyFindManyResolve.mockClear();
       spyCountResolve.mockClear();
       await paginationResolver.resolve({

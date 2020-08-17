@@ -1,9 +1,7 @@
-/* @flow */
-
 import { ObjectTypeComposer } from 'graphql-compose';
 import {
   preparePaginationResolver,
-  type ComposeWithPaginationOpts,
+  ComposeWithPaginationOpts,
   DEFAULT_RESOLVER_NAME,
 } from './paginationResolver';
 

@@ -1,11 +1,9 @@
-/* @flow */
-/* eslint-disable no-param-reassign, no-use-before-define */
-
 import type {
   Resolver,
   ObjectTypeComposer,
   ResolverResolveParams, // eslint-disable-line
   ProjectionType,
+  ObjectTypeComposerArgumentConfigMap,
 } from 'graphql-compose';
 import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
 import { preparePaginationTC } from './preparePaginationType';
@@ -14,41 +12,41 @@ export const DEFAULT_RESOLVER_NAME = 'pagination';
 export const DEFAULT_PER_PAGE = 20;
 
 export type ComposeWithPaginationOpts = {
-  paginationResolverName?: string,
-  findResolverName: string,
-  countResolverName: string,
-  perPage?: number,
+  paginationResolverName?: string;
+  findResolverName: string;
+  countResolverName: string;
+  perPage?: number;
 };
 
 export type PaginationResolveParams<TContext> = {
-  source: any,
+  source: any;
   args: {
-    page?: ?number,
-    perPage?: ?number,
-    sort?: any,
-    filter?: { [fieldName: string]: any },
-    [argName: string]: any,
-  },
-  context: TContext,
-  info: GraphQLResolveInfo,
-  projection: $Shape<ProjectionType>,
-  [opt: string]: any,
+    page?: number | null;
+    perPage?: number | null;
+    sort?: any;
+    filter?: { [fieldName: string]: any };
+    [argName: string]: any;
+  };
+  context: TContext;
+  info: GraphQLResolveInfo;
+  projection: Partial<ProjectionType>;
+  [opt: string]: any;
 };
 
-export type PaginationType = {|
-  count: number,
-  items: any[],
-  pageInfo: PaginationInfoType,
-|};
+export type PaginationType = {
+  count: number;
+  items: any[];
+  pageInfo: PaginationInfoType;
+};
 
-export type PaginationInfoType = {|
-  currentPage: number,
-  perPage: number,
-  itemCount: number,
-  pageCount: number,
-  hasPreviousPage: boolean,
-  hasNextPage: boolean,
-|};
+export type PaginationInfoType = {
+  currentPage: number;
+  perPage: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
 
 export function preparePaginationResolver<TSource, TContext>(
   tc: ObjectTypeComposer<TSource, TContext>,
@@ -94,7 +92,7 @@ export function preparePaginationResolver<TSource, TContext>(
   }
   const findManyResolve = findManyResolver.getResolve();
 
-  const additionalArgs = {};
+  const additionalArgs: ObjectTypeComposerArgumentConfigMap = {};
   if (findManyResolver.hasArg('filter')) {
     const filter = findManyResolver.getArg('filter');
     if (filter) {
@@ -122,23 +120,23 @@ export function preparePaginationResolver<TSource, TContext>(
         description: '',
         defaultValue: opts.perPage || DEFAULT_PER_PAGE,
       },
-      ...(additionalArgs: any),
-    },
-    resolve: async (rp: $Shape<PaginationResolveParams<TContext>>) => {
+      ...additionalArgs,
+    } as any,
+    resolve: async (rp: PaginationResolveParams<TContext>) => {
       let countPromise;
       let findManyPromise;
       const { projection = {}, args, rawQuery } = rp;
 
-      const page = parseInt(args.page, 10) || 1;
+      const page = parseInt(args.page as any, 10) || 1;
       if (page <= 0) {
         throw new Error('Argument `page` should be positive number.');
       }
-      const perPage = parseInt(args.perPage, 10) || opts.perPage || DEFAULT_PER_PAGE;
+      const perPage = parseInt(args.perPage as any, 10) || opts.perPage || DEFAULT_PER_PAGE;
       if (perPage <= 0) {
         throw new Error('Argument `perPage` should be positive number.');
       }
 
-      const countParams: $Shape<ResolverResolveParams<TSource, TContext, any>> = {
+      const countParams: ResolverResolveParams<TSource, TContext, any> = {
         ...rp,
         rawQuery,
         args: {
@@ -156,7 +154,7 @@ export function preparePaginationResolver<TSource, TContext>(
         countPromise = Promise.resolve(0);
       }
 
-      const findManyParams: $Shape<ResolverResolveParams<TSource, TContext, any>> = {
+      const findManyParams: ResolverResolveParams<TSource, TContext, any> = {
         ...rp,
       };
 

@@ -1,6 +1,3 @@
-/* @flow */
-/* eslint-disable no-param-reassign */
-
 import { UserTC } from '../__mocks__/User';
 
 describe('mocks/UserTC', () => {
