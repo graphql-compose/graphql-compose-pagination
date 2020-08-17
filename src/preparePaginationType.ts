@@ -1,7 +1,4 @@
-/* @flow */
-/* eslint-disable arrow-body-style */
-
-import { upperFirst, ObjectTypeComposer, type SchemaComposer } from 'graphql-compose';
+import { upperFirst, ObjectTypeComposer, SchemaComposer } from 'graphql-compose';
 
 // PaginationInfo should be global
 const PaginationInfoTC = ObjectTypeComposer.createTemp(`
@@ -32,15 +29,15 @@ export function preparePaginationInfoTC<TContext>(
 ): ObjectTypeComposer<any, TContext> {
   // Pagination Info can be overrided via SchemaComposer registry
   if (sc.hasInstance('PaginationInfo', ObjectTypeComposer)) {
-    return (sc.get('PaginationInfo'): any);
+    return sc.getOTC('PaginationInfo');
   }
-  sc.set('PaginationInfo', (PaginationInfoTC: any));
-  return (PaginationInfoTC: any);
+  sc.set('PaginationInfo', PaginationInfoTC);
+  return PaginationInfoTC;
 }
 
 export function preparePaginationTC<TSource, TContext>(
   tc: ObjectTypeComposer<TSource, TContext>,
-  resolverName: ?string
+  resolverName?: string
 ): ObjectTypeComposer<TSource, TContext> {
   const schemaComposer = tc.schemaComposer;
   const name = `${tc.getTypeName()}${upperFirst(resolverName || 'pagination')}`;
