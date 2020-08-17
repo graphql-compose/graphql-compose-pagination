@@ -5,4 +5,9 @@ export default composeWithPagination;
 
 export { composeWithPagination, preparePaginationResolver };
 
-export type { ComposeWithPaginationOpts } from './paginationResolver';
+export type {
+  ComposeWithPaginationOpts,
+  PaginationResolveParams,
+  PaginationType,
+  PaginationInfoType,
+} from './paginationResolver';
