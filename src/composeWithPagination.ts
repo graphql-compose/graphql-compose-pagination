@@ -3,7 +3,7 @@ import {
   preparePaginationResolver,
   ComposeWithPaginationOpts,
   DEFAULT_RESOLVER_NAME,
-} from './paginationResolver';
+} from './pagination';
 
 export function composeWithPagination<TSource, TContext>(
   typeComposer: ObjectTypeComposer<TSource, TContext>,
@@ -19,14 +19,12 @@ export function composeWithPagination<TSource, TContext>(
     throw new Error('You should provide non-empty options to composeWithPagination');
   }
 
-  const resolverName = opts.paginationResolverName || DEFAULT_RESOLVER_NAME;
-
+  const resolverName = opts.name || DEFAULT_RESOLVER_NAME;
   if (typeComposer.hasResolver(resolverName)) {
     return typeComposer;
   }
-
   const resolver = preparePaginationResolver(typeComposer, opts);
-
   typeComposer.setResolver(resolverName, resolver);
+
   return typeComposer;
 }

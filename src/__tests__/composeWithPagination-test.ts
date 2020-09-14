@@ -1,12 +1,12 @@
 import { ObjectTypeComposer, schemaComposer } from 'graphql-compose';
 import { GraphQLList, graphql } from 'graphql-compose/lib/graphql';
 import { composeWithPagination } from '../composeWithPagination';
-import { UserTC } from '../__mocks__/User';
+import { UserTC, countResolver, findManyResolver } from '../__mocks__/User';
 
-describe('composeWithRelay', () => {
+describe('composeWithPagination', () => {
   const userComposer = composeWithPagination(UserTC, {
-    countResolverName: 'count',
-    findResolverName: 'findMany',
+    countResolver,
+    findManyResolver,
     perPage: 5,
   });
 
@@ -32,17 +32,17 @@ describe('composeWithRelay', () => {
       }).toThrowError('should provide non-empty options');
     });
 
-    it('should not change `pagination` resolver if exists', () => {
+    it('should not change `pagination` resolver if it already exists', () => {
       let myTC = schemaComposer.createObjectTC('type Complex { a: String, b: Int }');
       myTC.addResolver({
         name: 'pagination',
         resolve: () => 'mockData',
       });
 
-      // try ovewrite `pagination` resolver
+      // try overwrite `pagination` resolver
       myTC = composeWithPagination(myTC, {
-        countResolverName: 'count',
-        findResolverName: 'findMany',
+        countResolver,
+        findManyResolver,
       });
 
       expect(myTC.getResolver('pagination')).toBeTruthy();
@@ -60,33 +60,33 @@ describe('composeWithRelay', () => {
         resolve: () => ['mockData'],
       });
       myTC = composeWithPagination(myTC, {
-        paginationResolverName: 'customPagination',
-        countResolverName: 'count',
-        findResolverName: 'findMany',
+        name: 'customPagination',
+        countResolver,
+        findManyResolver,
       });
 
       expect(myTC.getResolver('customPagination')).toBeTruthy();
       expect(myTC.hasResolver('pagination')).toBeFalsy();
     });
 
-    it('should add two connection resolvers', () => {
+    it('should return different resolvers', () => {
       let myTC = schemaComposer.createObjectTC('type CustomComplex { a: String, b: Int }');
-      myTC.addResolver({
+      const myCountResolver = schemaComposer.createResolver({
         name: 'count',
         resolve: () => 1,
       });
-      myTC.addResolver({
+      const myFindManyResolver = schemaComposer.createResolver({
         name: 'findMany',
         resolve: () => ['mockData'],
       });
       myTC = composeWithPagination(myTC, {
-        countResolverName: 'count',
-        findResolverName: 'findMany',
+        countResolver: myCountResolver,
+        findManyResolver: myFindManyResolver,
       });
       myTC = composeWithPagination(myTC, {
-        paginationResolverName: 'customPagination',
-        countResolverName: 'count',
-        findResolverName: 'findMany',
+        name: 'customPagination',
+        countResolver: myCountResolver,
+        findManyResolver: myFindManyResolver,
       });
 
       expect(myTC.hasResolver('pagination')).toBeTruthy();

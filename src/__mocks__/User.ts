@@ -93,7 +93,7 @@ function prepareFilterFromArgs(resolveParams = {} as ResolverResolveParams<any, 
   return filter;
 }
 
-export const findManyResolver = schemaComposer.createResolver({
+export const findManyResolver = schemaComposer.createResolver<any, any>({
   name: 'findMany',
   kind: 'query',
   type: UserTC,
@@ -130,7 +130,6 @@ export const findManyResolver = schemaComposer.createResolver({
     return Promise.resolve(list);
   },
 });
-UserTC.setResolver('findMany', findManyResolver);
 
 export const countResolver = schemaComposer.createResolver({
   name: 'count',
@@ -143,4 +142,3 @@ export const countResolver = schemaComposer.createResolver({
     return Promise.resolve(filteredUserList(userList, prepareFilterFromArgs(resolveParams)).length);
   },
 });
-UserTC.setResolver('count', countResolver);

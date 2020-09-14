@@ -55,11 +55,11 @@ export function preparePaginationTC<TSource, TContext>(
         description: 'Total object count.',
       },
       items: {
-        type: () => tc.getTypeNonNull().getTypePlural(),
+        type: () => tc.NonNull.List,
         description: 'Array of objects.',
       },
       pageInfo: {
-        type: preparePaginationInfoTC(schemaComposer).getTypeNonNull(),
+        type: preparePaginationInfoTC(schemaComposer).NonNull,
         description: 'Information to aid in pagination.',
       },
     },

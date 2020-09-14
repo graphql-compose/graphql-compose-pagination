@@ -1,36 +1,19 @@
+import { Resolver, inspect } from 'graphql-compose';
 import type {
-  Resolver,
   ObjectTypeComposer,
-  ResolverResolveParams, // eslint-disable-line
-  ProjectionType,
+  ResolverResolveParams,
   ObjectTypeComposerArgumentConfigMap,
 } from 'graphql-compose';
-import type { GraphQLResolveInfo } from 'graphql-compose/lib/graphql';
-import { preparePaginationTC } from './preparePaginationType';
+import { preparePaginationTC } from './types';
 
 export const DEFAULT_RESOLVER_NAME = 'pagination';
 export const DEFAULT_PER_PAGE = 20;
 
 export type ComposeWithPaginationOpts = {
-  paginationResolverName?: string;
-  findResolverName: string;
-  countResolverName: string;
+  findManyResolver: Resolver;
+  countResolver: Resolver;
+  name?: string;
   perPage?: number;
-};
-
-export type PaginationResolveParams<TContext> = {
-  source: any;
-  args: {
-    page?: number | null;
-    perPage?: number | null;
-    sort?: any;
-    filter?: { [fieldName: string]: any };
-    [argName: string]: any;
-  };
-  context: TContext;
-  info: GraphQLResolveInfo;
-  projection: Partial<ProjectionType>;
-  [opt: string]: any;
 };
 
 export type PaginationType = {
@@ -48,48 +31,43 @@ export type PaginationInfoType = {
   hasNextPage: boolean;
 };
 
+export interface PaginationTArgs {
+  page?: number;
+  perPage?: number;
+  filter?: any;
+  sort?: any;
+}
+
 export function preparePaginationResolver<TSource, TContext>(
   tc: ObjectTypeComposer<TSource, TContext>,
   opts: ComposeWithPaginationOpts
-): Resolver<TSource, TContext> {
+): Resolver<TSource, TContext, PaginationTArgs> {
   if (!tc || tc.constructor.name !== 'ObjectTypeComposer') {
     throw new Error(
       'First arg for prepareConnectionResolver() should be instance of ObjectTypeComposer'
     );
   }
 
-  const resolverName = opts.paginationResolverName || DEFAULT_RESOLVER_NAME;
+  const resolverName = opts.name || DEFAULT_RESOLVER_NAME;
 
-  if (!opts.countResolverName) {
+  if (!opts.countResolver || !(opts.countResolver instanceof Resolver)) {
     throw new Error(
-      `ObjectTypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
-        'should have option `opts.countResolverName`.'
+      `Option 'opts.countResolver' must be a Resolver instance. Received ${inspect(
+        opts.countResolver
+      )}`
     );
   }
-  const countResolver = tc.getResolver(opts.countResolverName);
-  if (!countResolver) {
-    throw new Error(
-      `ObjectTypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
-        `should have resolver with name '${opts.countResolverName}' ` +
-        'due opts.countResolverName.'
-    );
-  }
-  const countResolve = countResolver.getResolve();
 
-  if (!opts.findResolverName) {
+  const countResolve = opts.countResolver.getResolve();
+
+  if (!opts.findManyResolver || !(opts.findManyResolver instanceof Resolver)) {
     throw new Error(
-      `ObjectTypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
-        'should have option `opts.findResolverName`.'
+      `Option 'opts.findManyResolver' must be a Resolver instance. Received ${inspect(
+        opts.findManyResolver
+      )}`
     );
   }
-  const findManyResolver = tc.getResolver(opts.findResolverName);
-  if (!findManyResolver) {
-    throw new Error(
-      `ObjectTypeComposer(${tc.getTypeName()}) provided to composeWithConnection ` +
-        `should have resolver with name '${opts.findResolverName}' ` +
-        'due opts.countResolverName.'
-    );
-  }
+  const findManyResolver = opts.findManyResolver;
   const findManyResolve = findManyResolver.getResolve();
 
   const additionalArgs: ObjectTypeComposerArgumentConfigMap = {};
@@ -121,8 +99,8 @@ export function preparePaginationResolver<TSource, TContext>(
         defaultValue: opts.perPage || DEFAULT_PER_PAGE,
       },
       ...additionalArgs,
-    } as any,
-    resolve: async (rp: PaginationResolveParams<TContext>) => {
+    },
+    resolve: async (rp: ResolverResolveParams<TSource, TContext, PaginationTArgs>) => {
       let countPromise;
       let findManyPromise;
       const { projection = {}, args, rawQuery } = rp;

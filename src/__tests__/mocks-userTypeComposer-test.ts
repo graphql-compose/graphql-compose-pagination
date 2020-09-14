@@ -1,18 +1,18 @@
-import { UserTC } from '../__mocks__/User';
+import { countResolver, findManyResolver } from '../__mocks__/User';
 
 describe('mocks/UserTC', () => {
-  it('UserTC should have `count` resolver', async () => {
-    const cnt = await UserTC.getResolver('count').resolve({});
+  it('UserTC should have `countResolver`', async () => {
+    const cnt = await countResolver.resolve({});
     expect(cnt).toBe(15);
   });
 
-  it('UserTC should have `findMany` resolver', async () => {
-    const res = await UserTC.getResolver('findMany').resolve({});
+  it('UserTC should have `findManyResolver`', async () => {
+    const res = await findManyResolver.resolve({});
     expect(res).toHaveLength(15);
   });
 
-  it('UserTC should have `findMany` resolver with working `filter` arg', async () => {
-    const res = await UserTC.getResolver('findMany').resolve({
+  it('UserTC should have `findManyResolver` with working `filter` arg', async () => {
+    const res = await findManyResolver.resolve({
       args: {
         filter: {
           gender: 'm',
@@ -32,8 +32,8 @@ describe('mocks/UserTC', () => {
     expect(res).toEqual([{ id: 9, name: 'user09', age: 19, gender: 'm' }]);
   });
 
-  it('UserTC should have `findMany` resolver with working `sort` arg', async () => {
-    const res = await UserTC.getResolver('findMany').resolve({
+  it('UserTC should have `findManyResolver` with working `sort` arg', async () => {
+    const res = await findManyResolver.resolve({
       args: {
         sort: {
           age: -1,
