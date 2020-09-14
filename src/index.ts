@@ -4,7 +4,7 @@ import { composeWithPagination } from './composeWithPagination';
 export { composeWithPagination, preparePaginationResolver };
 
 export type {
-  ComposeWithPaginationOpts,
+  PaginationResolverOpts,
   PaginationTArgs,
   PaginationType,
   PaginationInfoType,

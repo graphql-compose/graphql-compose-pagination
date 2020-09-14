@@ -9,7 +9,7 @@ import { preparePaginationTC } from './types';
 export const DEFAULT_RESOLVER_NAME = 'pagination';
 export const DEFAULT_PER_PAGE = 20;
 
-export type ComposeWithPaginationOpts = {
+export type PaginationResolverOpts = {
   findManyResolver: Resolver;
   countResolver: Resolver;
   name?: string;
@@ -40,7 +40,7 @@ export interface PaginationTArgs {
 
 export function preparePaginationResolver<TSource, TContext>(
   tc: ObjectTypeComposer<TSource, TContext>,
-  opts: ComposeWithPaginationOpts
+  opts: PaginationResolverOpts
 ): Resolver<TSource, TContext, PaginationTArgs> {
   if (!tc || tc.constructor.name !== 'ObjectTypeComposer') {
     throw new Error(

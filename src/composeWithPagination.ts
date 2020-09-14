@@ -1,13 +1,16 @@
 import { ObjectTypeComposer } from 'graphql-compose';
 import {
   preparePaginationResolver,
-  ComposeWithPaginationOpts,
+  PaginationResolverOpts,
   DEFAULT_RESOLVER_NAME,
 } from './pagination';
 
+/**
+ * @deprecated use `preparePaginationResolver()` instead
+ */
 export function composeWithPagination<TSource, TContext>(
   typeComposer: ObjectTypeComposer<TSource, TContext>,
-  opts: ComposeWithPaginationOpts
+  opts: PaginationResolverOpts
 ): ObjectTypeComposer<TSource, TContext> {
   if (!typeComposer || typeComposer.constructor.name !== 'ObjectTypeComposer') {
     throw new Error(
