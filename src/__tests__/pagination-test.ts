@@ -56,6 +56,15 @@ describe('preparePaginationResolver()', () => {
         })
       ).toThrowError("'opts.findManyResolver' must be a Resolver instance");
     });
+
+    it('should return a separate resolver with different type', () => {
+      const anotherPaginationResolver = preparePaginationResolver(UserTC, {
+        countResolver,
+        findManyResolver,
+        name: 'otherPagination',
+      });
+      expect(anotherPaginationResolver.getTypeName()).toBe('UserOtherPagination');
+    });
   });
 
   describe('resolver basic properties', () => {
