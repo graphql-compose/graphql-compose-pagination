@@ -61,10 +61,10 @@ describe('preparePaginationResolver()', () => {
       const anotherPaginationResolver = preparePaginationResolver(UserTC, {
         countResolver,
         findManyResolver,
-        name: 'otherPagination'
+        name: 'otherPagination',
       });
       expect(anotherPaginationResolver.getTypeName()).toBe('UserOtherPagination');
-    })
+    });
   });
 
   describe('resolver basic properties', () => {
