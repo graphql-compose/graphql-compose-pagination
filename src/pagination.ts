@@ -85,7 +85,7 @@ export function preparePaginationResolver<TSource, TContext>(
   }
 
   return tc.schemaComposer.createResolver({
-    type: preparePaginationTC(tc),
+    type: preparePaginationTC(tc, resolverName),
     name: resolverName,
     kind: 'query',
     args: {
