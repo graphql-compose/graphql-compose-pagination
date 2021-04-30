@@ -28,7 +28,7 @@ export function preparePaginationInfoTC<TContext>(
   sc: SchemaComposer<TContext>
 ): ObjectTypeComposer<any, TContext> {
   // Pagination Info can be overrided via SchemaComposer registry
-  if (sc.hasInstance('PaginationInfo', ObjectTypeComposer)) {
+  if (sc.has('PaginationInfo')) {
     return sc.getOTC('PaginationInfo');
   }
   sc.set('PaginationInfo', PaginationInfoTC);

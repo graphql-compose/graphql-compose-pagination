@@ -98,7 +98,7 @@ export function preparePaginationResolver<TSource, TContext>(
         description: '',
         defaultValue: opts.perPage || DEFAULT_PER_PAGE,
       },
-      ...additionalArgs,
+      ...(additionalArgs as any),
     },
     resolve: async (rp: ResolverResolveParams<TSource, TContext, PaginationTArgs>) => {
       let countPromise;
