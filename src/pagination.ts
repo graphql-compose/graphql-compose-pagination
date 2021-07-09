@@ -1,6 +1,7 @@
 import { Resolver, inspect } from 'graphql-compose';
 import type {
   ObjectTypeComposer,
+  InterfaceTypeComposer,
   ResolverResolveParams,
   ObjectTypeComposerArgumentConfigMap,
 } from 'graphql-compose';
@@ -39,7 +40,7 @@ export interface PaginationTArgs {
 }
 
 export function preparePaginationResolver<TSource, TContext>(
-  tc: ObjectTypeComposer<TSource, TContext>,
+  tc: ObjectTypeComposer<TSource, TContext> | InterfaceTypeComposer<TSource, TContext>,
   opts: PaginationResolverOpts
 ): Resolver<TSource, TContext, PaginationTArgs> {
   if (!tc || tc.constructor.name !== 'ObjectTypeComposer') {
