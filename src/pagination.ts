@@ -2,6 +2,7 @@ import { Resolver, inspect } from 'graphql-compose';
 import type {
   ObjectTypeComposer,
   InterfaceTypeComposer,
+  UnionTypeComposer,
   ResolverResolveParams,
   ObjectTypeComposerArgumentConfigMap,
 } from 'graphql-compose';
@@ -9,7 +10,7 @@ import { preparePaginationTC } from './types';
 
 export const DEFAULT_RESOLVER_NAME = 'pagination';
 export const DEFAULT_PER_PAGE = 20;
-const ALLOWED_TYPECOMPOSERS = ['ObjectTypeComposer', 'UnionTypeComposer'];
+const ALLOWED_TYPECOMPOSERS = ['ObjectTypeComposer', 'InterfaceTypeComposer', 'UnionTypeComposer'];
 
 export type PaginationResolverOpts = {
   findManyResolver: Resolver;
@@ -41,7 +42,10 @@ export interface PaginationTArgs {
 }
 
 export function preparePaginationResolver<TSource, TContext>(
-  tc: ObjectTypeComposer<TSource, TContext> | InterfaceTypeComposer<TSource, TContext>,
+  tc:
+    | ObjectTypeComposer<TSource, TContext>
+    | InterfaceTypeComposer<TSource, TContext>
+    | UnionTypeComposer<TSource, TContext>,
   opts: PaginationResolverOpts
 ): Resolver<TSource, TContext, PaginationTArgs> {
   if (!tc || !ALLOWED_TYPECOMPOSERS.includes(tc.constructor.name)) {
