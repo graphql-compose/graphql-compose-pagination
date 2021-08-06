@@ -3,6 +3,8 @@ import type {
   ObjectTypeComposer,
   InterfaceTypeComposer,
   UnionTypeComposer,
+  ScalarTypeComposer,
+  EnumTypeComposer,
   ResolverResolveParams,
   ObjectTypeComposerArgumentConfigMap,
 } from 'graphql-compose';
@@ -10,7 +12,13 @@ import { preparePaginationTC } from './types';
 
 export const DEFAULT_RESOLVER_NAME = 'pagination';
 export const DEFAULT_PER_PAGE = 20;
-const ALLOWED_TYPECOMPOSERS = ['ObjectTypeComposer', 'InterfaceTypeComposer', 'UnionTypeComposer'];
+const ALLOWED_TYPE_COMPOSERS = [
+  'ObjectTypeComposer',
+  'InterfaceTypeComposer',
+  'UnionTypeComposer',
+  'ScalarTypeComposer',
+  'EnumTypeComposer',
+];
 
 export type PaginationResolverOpts = {
   findManyResolver: Resolver;
@@ -45,12 +53,14 @@ export function preparePaginationResolver<TSource, TContext>(
   tc:
     | ObjectTypeComposer<TSource, TContext>
     | InterfaceTypeComposer<TSource, TContext>
-    | UnionTypeComposer<TSource, TContext>,
+    | UnionTypeComposer<TSource, TContext>
+    | ScalarTypeComposer<TContext>
+    | EnumTypeComposer<TContext>,
   opts: PaginationResolverOpts
 ): Resolver<TSource, TContext, PaginationTArgs> {
-  if (!tc || !ALLOWED_TYPECOMPOSERS.includes(tc.constructor.name)) {
+  if (!tc || !ALLOWED_TYPE_COMPOSERS.includes(tc.constructor.name)) {
     throw new Error(
-      `First arg for preparePaginationResolver() should be instance of ${ALLOWED_TYPECOMPOSERS.join(
+      `First arg for preparePaginationResolver() should be instance of ${ALLOWED_TYPE_COMPOSERS.join(
         ' or '
       )}`
     );

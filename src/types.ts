@@ -4,6 +4,8 @@ import {
   SchemaComposer,
   InterfaceTypeComposer,
   UnionTypeComposer,
+  ScalarTypeComposer,
+  EnumTypeComposer,
 } from 'graphql-compose';
 
 // PaginationInfo should be global
@@ -45,7 +47,9 @@ export function preparePaginationTC<TSource, TContext>(
   tc:
     | ObjectTypeComposer<TSource, TContext>
     | InterfaceTypeComposer<TSource, TContext>
-    | UnionTypeComposer<TSource, TContext>,
+    | UnionTypeComposer<TSource, TContext>
+    | ScalarTypeComposer<TContext>
+    | EnumTypeComposer<TContext>,
   resolverName?: string
 ): ObjectTypeComposer<TSource, TContext> {
   const schemaComposer = tc.schemaComposer;
