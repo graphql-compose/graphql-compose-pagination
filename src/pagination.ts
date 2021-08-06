@@ -9,6 +9,7 @@ import { preparePaginationTC } from './types';
 
 export const DEFAULT_RESOLVER_NAME = 'pagination';
 export const DEFAULT_PER_PAGE = 20;
+const ALLOWED_TYPECOMPOSERS = ['ObjectTypeComposer', 'UnionTypeComposer'];
 
 export type PaginationResolverOpts = {
   findManyResolver: Resolver;
@@ -43,9 +44,11 @@ export function preparePaginationResolver<TSource, TContext>(
   tc: ObjectTypeComposer<TSource, TContext> | InterfaceTypeComposer<TSource, TContext>,
   opts: PaginationResolverOpts
 ): Resolver<TSource, TContext, PaginationTArgs> {
-  if (!tc || tc.constructor.name !== 'ObjectTypeComposer') {
+  if (!tc || !ALLOWED_TYPECOMPOSERS.includes(tc.constructor.name)) {
     throw new Error(
-      'First arg for prepareConnectionResolver() should be instance of ObjectTypeComposer'
+      `First arg for preparePaginationResolver() should be instance of ${ALLOWED_TYPECOMPOSERS.join(
+        ' or '
+      )}`
     );
   }
 
