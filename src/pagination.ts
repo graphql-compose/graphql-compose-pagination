@@ -45,7 +45,7 @@ export function preparePaginationResolver<TSource, TContext>(
 ): Resolver<TSource, TContext, PaginationTArgs> {
   if (!tc || tc.constructor.name !== 'ObjectTypeComposer') {
     throw new Error(
-      'First arg for prepareConnectionResolver() should be instance of ObjectTypeComposer'
+      'First arg for preparePaginationResolver() should be instance of ObjectTypeComposer'
     );
   }
 
