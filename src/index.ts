@@ -1,7 +1,8 @@
 import { preparePaginationResolver } from './pagination';
 import { composeWithPagination } from './composeWithPagination';
+import { preparePaginationTC } from './types';
 
-export { composeWithPagination, preparePaginationResolver };
+export { composeWithPagination, preparePaginationResolver, preparePaginationTC };
 
 export type {
   PaginationResolverOpts,
